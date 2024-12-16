@@ -20,15 +20,15 @@
     }).addTo(map);
 
     // Carrega os dados do arquivo JSON
-    fetch('locations.json')
-        .then(response => response.json())
-        .then(data => {
-            data.forEach(function(location) {
-                L.marker([location.lat, location.lng])
-                    .addTo(map)
-                    .bindPopup('<b>' + location.name + '</b>');
-            });
+    fetch('locations.json?version=' + new Date().getTime())
+    .then(response => response.json())
+    .then(data => {
+        data.forEach(function(location) {
+            L.marker([location.lat, location.lng])
+                .addTo(map)
+                .bindPopup('<b>' + location.name + '</b>');
         });
+    });
 </script>
 
 </body>
