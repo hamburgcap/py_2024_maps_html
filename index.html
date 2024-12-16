@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mapa Dinâmico</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+    <h1>Mapa Dinâmico</h1>
+    <div id="map" style="width: 100%; height: 500px;"></div>
+    <script>
+        // Cria o mapa
+        var map = L.map('map').setView([-23.55052, -46.633308], 5);
+
+        // Adiciona camadas de mapa (tiles)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Dados dinâmicos
+        var locations = [
+            {"lat": -23.550520, "lng": -46.633308, "name": "São Paulo"},
+            {"lat": -22.906847, "lng": -43.172897, "name": "Rio de Janeiro"},
+            {"lat": -19.815702, "lng": -43.954198, "name": "Belo Horizonte"}
+        ];
+
+        // Adiciona marcadores dinamicamente
+        locations.forEach(function(location) {
+            L.marker([location.lat, location.lng])
+                .addTo(map)
+                .bindPopup('<b>' + location.name + '</b>');
+        });
+    </script>
+</body>
+</html>
