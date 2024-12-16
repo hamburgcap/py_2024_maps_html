@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Mapa Dinâmico</title>
+    <title>Mapa de Imoveis da CEF</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -26,7 +26,7 @@
         data.forEach(function(location) {
             L.marker([location.lat, location.lng])
                 .addTo(map)
-                .bindPopup('<b>' + location.preco + '</b>');
+                .bindPopup('<b>' + location.preco + location.link_de_acesso +'</b>');
         });
     });
 </script>

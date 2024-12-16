@@ -16,7 +16,7 @@ def clean_address(address):
     if 'PR,CURITIBA' not in address:
         return None  # Ignora endereços que não contêm Curitiba
     cleaned = ','.join(address.split(',')[:4])
-    return cleaned.replace("Brasil", "").strip().strip(',')
+    return cleaned.replace("Brasil,", "").strip().strip(',')
 
 def get_geolocation(address):
     """Obtém a geolocalização para um endereço usando uma API open-source (ex. Nominatim)."""
@@ -50,6 +50,12 @@ def open_file_dialog():
     file_path = filedialog.askopenfilename(title="Selecione um arquivo Rda", filetypes=[("Rda files", "*.Rda")])
     return file_path
 
+def convert_to_serializable(obj):
+    """Converte objetos não serializáveis em string."""
+    if isinstance(obj, (pd.Timestamp, pd.Timedelta, pd.Series, pd.DataFrame)):
+        return str(obj)
+    return obj
+
 def main():
     # Passo 1: Selecionar o arquivo Rda
     file_path = open_file_dialog()
@@ -59,8 +65,8 @@ def main():
 
     # Passo 2: Carregar o arquivo Rda
     df = load_rda_file(file_path)
-    if 'google_query' not in df.columns or 'preco' not in df.columns:
-        print("As colunas 'google_query' e/ou 'preco' não foram encontradas no arquivo.")
+    if 'google_query' not in df.columns:
+        print("A coluna 'google_query' não foi encontrada no arquivo.")
         return
 
     # Passo 3: Limpar endereços e obter coordenadas somente para 'Curitiba'
@@ -72,12 +78,13 @@ def main():
         print(f"Processando: {address}")
         lat, lng = get_geolocation(address)
         if lat is not None and lng is not None:
-            locations.append({
+            row_data = {k: str(v) for k, v in row.to_dict().items()}  # Converte valores para string
+            row_data.update({
                 "lat": lat,
                 "lng": lng,
-                "name": address,
-                "preco": row['preco']  # Adiciona o valor da coluna preco
+                "name": address
             })
+            locations.append(row_data)  # Adiciona todas as colunas junto com as coordenadas
         else:
             print(f"Não foi possível encontrar coordenadas para: {address}")
 
