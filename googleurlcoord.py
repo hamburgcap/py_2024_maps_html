@@ -59,18 +59,25 @@ def main():
 
     # Passo 2: Carregar o arquivo Rda
     df = load_rda_file(file_path)
-    if 'google_query' not in df.columns:
-        print("A coluna 'google_query' não foi encontrada no arquivo.")
+    if 'google_query' not in df.columns or 'preco' not in df.columns:
+        print("As colunas 'google_query' e/ou 'preco' não foram encontradas no arquivo.")
         return
 
     # Passo 3: Limpar endereços e obter coordenadas somente para 'Curitiba'
-    addresses = df['google_query'].apply(clean_address).dropna()
     locations = []
-    for address in addresses:
+    for _, row in df.iterrows():
+        address = clean_address(row['google_query'])
+        if pd.isna(address):
+            continue
         print(f"Processando: {address}")
         lat, lng = get_geolocation(address)
         if lat is not None and lng is not None:
-            locations.append({"lat": lat, "lng": lng, "name": address})
+            locations.append({
+                "lat": lat,
+                "lng": lng,
+                "name": address,
+                "preco": row['preco']  # Adiciona o valor da coluna preco
+            })
         else:
             print(f"Não foi possível encontrar coordenadas para: {address}")
 

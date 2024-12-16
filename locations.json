@@ -2,351 +2,421 @@
     {
         "lat": -25.461459599734415,
         "lng": -49.347478827380684,
-        "name": "PR,CURITIBA,,RUA JOAO CASAGRANDE"
+        "name": "PR,CURITIBA,,RUA JOAO CASAGRANDE",
+        "preco": 81965.0
     },
     {
         "lat": -25.582450875408895,
         "lng": -49.33195904190397,
-        "name": "PR,CURITIBA,,RUA ANGELO TOZIM"
+        "name": "PR,CURITIBA,,RUA ANGELO TOZIM",
+        "preco": 86063.0
     },
     {
         "lat": -25.47932308872559,
         "lng": -49.32240780802054,
-        "name": "PR,CURITIBA,,RUA ANTONIO DALMARCO"
+        "name": "PR,CURITIBA,,RUA ANTONIO DALMARCO",
+        "preco": 92770.0
     },
     {
         "lat": -25.4421629,
         "lng": -49.314608199999995,
-        "name": "PR,CURITIBA,,RUA CARLOTA MION"
+        "name": "PR,CURITIBA,,RUA CARLOTA MION",
+        "preco": 170716.0
     },
     {
         "lat": -25.36908370813468,
         "lng": -49.21943460536756,
-        "name": "PR,CURITIBA,,RUA FABIO FANUCHI"
+        "name": "PR,CURITIBA,,RUA FABIO FANUCHI",
+        "preco": 101926.0
     },
     {
         "lat": -25.592005781080985,
         "lng": -49.33700124344823,
-        "name": "PR,CURITIBA,,RUA JOAQUIM BERTHOLDI"
+        "name": "PR,CURITIBA,,RUA JOAQUIM BERTHOLDI",
+        "preco": 153076.0
     },
     {
         "lat": -25.56824121697729,
         "lng": -49.32114517223332,
-        "name": "PR,CURITIBA,,RUA ANTONIO ZANON"
+        "name": "PR,CURITIBA,,RUA ANTONIO ZANON",
+        "preco": 132971.0
     },
     {
         "lat": -25.475511615589983,
         "lng": -49.23860172527587,
-        "name": "PR,CURITIBA,,RUA PEDRO LOCATELLI JUNIOR"
+        "name": "PR,CURITIBA,,RUA PEDRO LOCATELLI JUNIOR",
+        "preco": 165922.0
     },
     {
         "lat": -25.433378543802956,
         "lng": -49.27181189683794,
-        "name": "PR,CURITIBA,,ALAMEDA DOUTOR MURICY"
+        "name": "PR,CURITIBA,,ALAMEDA DOUTOR MURICY",
+        "preco": 214245.0
     },
     {
         "lat": -25.515615120341273,
         "lng": -49.286620378970866,
-        "name": "PR,CURITIBA,,RUA LUCIANO PIUZZI"
+        "name": "PR,CURITIBA,,RUA LUCIANO PIUZZI",
+        "preco": 114839.0
     },
     {
         "lat": -25.38876805814747,
         "lng": -49.2410539784587,
-        "name": "PR,CURITIBA,,RUA DEPUTADO ATILIO DE ALMEIDA BARBOSA"
+        "name": "PR,CURITIBA,,RUA DEPUTADO ATILIO DE ALMEIDA BARBOSA",
+        "preco": 117861.0
     },
     {
         "lat": -25.454202248864128,
         "lng": -49.35405810319388,
-        "name": "PR,CURITIBA,,RUA DEPUTADO GABRIEL SAMPAIO"
+        "name": "PR,CURITIBA,,RUA DEPUTADO GABRIEL SAMPAIO",
+        "preco": 130000.0
     },
     {
         "lat": -25.59685882609742,
         "lng": -49.337435051726715,
-        "name": "PR,CURITIBA,,RUA ARETUZA MACHADO DE ANDRADE"
+        "name": "PR,CURITIBA,,RUA ARETUZA MACHADO DE ANDRADE",
+        "preco": 116047.0
     },
     {
         "lat": -25.582450875408895,
         "lng": -49.33195904190397,
-        "name": "PR,CURITIBA,,RUA ANGELO TOZIM"
+        "name": "PR,CURITIBA,,RUA ANGELO TOZIM",
+        "preco": 134784.0
     },
     {
         "lat": -25.454527939297062,
         "lng": -49.34880307331244,
-        "name": "PR,CURITIBA,,RUA JOAO DEMBINSKI"
+        "name": "PR,CURITIBA,,RUA JOAO DEMBINSKI",
+        "preco": 149157.0
     },
     {
         "lat": -25.46219546351071,
         "lng": -49.33828377515044,
-        "name": "PR,CURITIBA,,RUA AYRTON GREIFFO"
+        "name": "PR,CURITIBA,,RUA AYRTON GREIFFO",
+        "preco": 145000.0
     },
     {
         "lat": -25.452486991447262,
         "lng": -49.355540468047586,
-        "name": "PR,CURITIBA,,RUA SALVADOR JOSE CORREIA COELHO"
+        "name": "PR,CURITIBA,,RUA SALVADOR JOSE CORREIA COELHO",
+        "preco": 152955.0
     },
     {
         "lat": -25.59685882609742,
         "lng": -49.337435051726715,
-        "name": "PR,CURITIBA,,RUA ARETUZA MACHADO DE ANDRADE"
+        "name": "PR,CURITIBA,,RUA ARETUZA MACHADO DE ANDRADE",
+        "preco": 107260.0
     },
     {
         "lat": -25.4882061247407,
         "lng": -49.31266006200956,
-        "name": "PR,CURITIBA,,RUA CAROLINA CASTELLI"
+        "name": "PR,CURITIBA,,RUA CAROLINA CASTELLI",
+        "preco": 131762.0
     },
     {
         "lat": -25.488618528948134,
         "lng": -49.25015278832044,
-        "name": "PR,CURITIBA,,RUA EVARISTO DA VEIGA"
+        "name": "PR,CURITIBA,,RUA EVARISTO DA VEIGA",
+        "preco": 220000.0
     },
     {
         "lat": -25.59089315956661,
         "lng": -49.34312369022308,
-        "name": "PR,CURITIBA,,RUA EWERTON LEINIG SAPORSKI"
+        "name": "PR,CURITIBA,,RUA EWERTON LEINIG SAPORSKI",
+        "preco": 160000.0
     },
     {
         "lat": -25.454527939297062,
         "lng": -49.34880307331244,
-        "name": "PR,CURITIBA,,RUA JOAO DEMBINSKI"
+        "name": "PR,CURITIBA,,RUA JOAO DEMBINSKI",
+        "preco": 165000.0
     },
     {
         "lat": -25.458218036124432,
         "lng": -49.353758125639544,
-        "name": "PR,CURITIBA,,RUA LEANDRO DACHEUX DO NASCIMENTO JUNIOR"
+        "name": "PR,CURITIBA,,RUA LEANDRO DACHEUX DO NASCIMENTO JUNIOR",
+        "preco": 142000.0
     },
     {
         "lat": -25.54854919121603,
         "lng": -49.3246147268411,
-        "name": "PR,CURITIBA,,RUA WIEGANDO OLSEN"
+        "name": "PR,CURITIBA,,RUA WIEGANDO OLSEN",
+        "preco": 233749.0
     },
     {
         "lat": -25.556569775566874,
         "lng": -49.301791277764714,
-        "name": "PR,CURITIBA,,RUA DILSON LUIZ"
+        "name": "PR,CURITIBA,,RUA DILSON LUIZ",
+        "preco": 143000.0
     },
     {
         "lat": -25.461257195348143,
         "lng": -49.22601061243988,
-        "name": "PR,CURITIBA,,RUA DR BRASILIO FERREIRA DA LUZ"
+        "name": "PR,CURITIBA,,RUA DR BRASILIO FERREIRA DA LUZ",
+        "preco": 800000.0
     },
     {
         "lat": -25.365412987238585,
         "lng": -49.26463947083055,
-        "name": "PR,CURITIBA,,RUA TEN CEL SERVANDO DE LOYOLA E SILVA"
+        "name": "PR,CURITIBA,,RUA TEN CEL SERVANDO DE LOYOLA E SILVA",
+        "preco": 406000.0
     },
     {
         "lat": -25.353006283711014,
         "lng": -49.24333157495192,
-        "name": "PR,CURITIBA,,RUA ESTEVAO MANIKA"
+        "name": "PR,CURITIBA,,RUA ESTEVAO MANIKA",
+        "preco": 176000.0
     },
     {
         "lat": -25.472231984064614,
         "lng": -49.347363200364526,
-        "name": "PR,CURITIBA,,RUA CLEMENTE RITZ"
+        "name": "PR,CURITIBA,,RUA CLEMENTE RITZ",
+        "preco": 142729.0
     },
     {
         "lat": -25.505201799250727,
         "lng": -49.29744464989861,
-        "name": "PR,CURITIBA,,RUA MARECHAL OCTAVIO SALDANHA MAZZA"
+        "name": "PR,CURITIBA,,RUA MARECHAL OCTAVIO SALDANHA MAZZA",
+        "preco": 195000.0
     },
     {
         "lat": -25.582450875408895,
         "lng": -49.33195904190397,
-        "name": "PR,CURITIBA,,RUA ANGELO TOZIM"
+        "name": "PR,CURITIBA,,RUA ANGELO TOZIM",
+        "preco": 157000.0
     },
     {
         "lat": -25.540812144507456,
         "lng": -49.337255823331915,
-        "name": "PR,CURITIBA,,RUA ARTHUR TAMBOSI"
+        "name": "PR,CURITIBA,,RUA ARTHUR TAMBOSI",
+        "preco": 244144.0
     },
     {
         "lat": -25.512708497876254,
         "lng": -49.24703980637396,
-        "name": "PR,CURITIBA,,RUA CASCAVEL"
+        "name": "PR,CURITIBA,,RUA CASCAVEL",
+        "preco": 201340.0
     },
     {
         "lat": -25.582450875408895,
         "lng": -49.33195904190397,
-        "name": "PR,CURITIBA,,RUA ANGELO TOZIM"
+        "name": "PR,CURITIBA,,RUA ANGELO TOZIM",
+        "preco": 163000.0
     },
     {
         "lat": -25.382305152973398,
         "lng": -49.22224231367634,
-        "name": "PR,CURITIBA,,RUA DOUTOR SATILAS DO AMARAL CAMARGO"
+        "name": "PR,CURITIBA,,RUA DOUTOR SATILAS DO AMARAL CAMARGO",
+        "preco": 292682.0
     },
     {
         "lat": -25.556569775566874,
         "lng": -49.301791277764714,
-        "name": "PR,CURITIBA,,RUA DILSON LUIZ"
+        "name": "PR,CURITIBA,,RUA DILSON LUIZ",
+        "preco": 160000.0
     },
     {
         "lat": -25.58294570771363,
         "lng": -49.340266683654136,
-        "name": "PR,CURITIBA,,RUA JULIA FERREIRA DO AMARAL STAMM"
+        "name": "PR,CURITIBA,,RUA JULIA FERREIRA DO AMARAL STAMM",
+        "preco": 165000.0
     },
     {
         "lat": -25.482969861215206,
         "lng": -49.29443913050322,
-        "name": "PR,CURITIBA,,RUA SALOMAO GUELMANN"
+        "name": "PR,CURITIBA,,RUA SALOMAO GUELMANN",
+        "preco": 705000.0
     },
     {
         "lat": -25.600321120748756,
         "lng": -49.3265867636812,
-        "name": "PR,CURITIBA,,RUA ANTONIO DONATTI"
+        "name": "PR,CURITIBA,,RUA ANTONIO DONATTI",
+        "preco": 185300.0
     },
     {
         "lat": -25.381425120379813,
         "lng": -49.22094155292049,
-        "name": "PR,CURITIBA,,RUA GHAZE SALEH"
+        "name": "PR,CURITIBA,,RUA GHAZE SALEH",
+        "preco": 692798.0
     },
     {
         "lat": -25.3632931597213,
         "lng": -49.228353457188454,
-        "name": "PR,CURITIBA,,ESTRADA GUILHERME WEIGERT"
+        "name": "PR,CURITIBA,,ESTRADA GUILHERME WEIGERT",
+        "preco": 186000.0
     },
     {
         "lat": -25.584861838650536,
         "lng": -49.339121608240994,
-        "name": "PR,CURITIBA,,RUA HUMBERTO BERTOLDI"
+        "name": "PR,CURITIBA,,RUA HUMBERTO BERTOLDI",
+        "preco": 180000.0
     },
     {
         "lat": -25.560491335716005,
         "lng": -49.33244045273643,
-        "name": "PR,CURITIBA,,RUA MAESTRO VICENTE DALO"
+        "name": "PR,CURITIBA,,RUA MAESTRO VICENTE DALO",
+        "preco": 154000.0
     },
     {
         "lat": -25.5907396,
         "lng": -49.33290025,
-        "name": "PR,CURITIBA,,RUA JOSE FRANCISCO PEREIRA"
+        "name": "PR,CURITIBA,,RUA JOSE FRANCISCO PEREIRA",
+        "preco": 180000.0
     },
     {
         "lat": -25.594509652448785,
         "lng": -49.33925734571705,
-        "name": "PR,CURITIBA,,RUA MARIA LUZARDI BERTOLDI"
+        "name": "PR,CURITIBA,,RUA MARIA LUZARDI BERTOLDI",
+        "preco": 204553.0
     },
     {
         "lat": -25.556569775566874,
         "lng": -49.301791277764714,
-        "name": "PR,CURITIBA,,RUA DILSON LUIZ"
+        "name": "PR,CURITIBA,,RUA DILSON LUIZ",
+        "preco": 178000.0
     },
     {
         "lat": -25.515666274176176,
         "lng": -49.28440847117849,
-        "name": "PR,CURITIBA,,RUA BRASIL PARANA DE CRISTO"
+        "name": "PR,CURITIBA,,RUA BRASIL PARANA DE CRISTO",
+        "preco": 182577.0
     },
     {
         "lat": -25.364159694813733,
         "lng": -49.22892932138764,
-        "name": "PR,CURITIBA,,RUA EDENIR CORREIA"
+        "name": "PR,CURITIBA,,RUA EDENIR CORREIA",
+        "preco": 290000.0
     },
     {
         "lat": -25.3632931597213,
         "lng": -49.228353457188454,
-        "name": "PR,CURITIBA,,ESTRADA GUILHERME WEIGERT"
+        "name": "PR,CURITIBA,,ESTRADA GUILHERME WEIGERT",
+        "preco": 250000.0
     },
     {
         "lat": -25.503762600766525,
         "lng": -49.30930550132776,
-        "name": "PR,CURITIBA,,RUA AGOSTINHO BRUSAMOLIN"
+        "name": "PR,CURITIBA,,RUA AGOSTINHO BRUSAMOLIN",
+        "preco": 300000.0
     },
     {
         "lat": -25.563418501405348,
         "lng": -49.310354996533924,
-        "name": "PR,CURITIBA,,RUA JOAO BATISTA BETTEGA JUNIOR"
+        "name": "PR,CURITIBA,,RUA JOAO BATISTA BETTEGA JUNIOR",
+        "preco": 200000.0
     },
     {
         "lat": -25.515448279744575,
         "lng": -49.248143476698445,
-        "name": "PR,CURITIBA,,RUA DOUTOR DANILO GOMES"
+        "name": "PR,CURITIBA,,RUA DOUTOR DANILO GOMES",
+        "preco": 184000.0
     },
     {
         "lat": -25.584861838650536,
         "lng": -49.339121608240994,
-        "name": "PR,CURITIBA,,RUA HUMBERTO BERTOLDI"
+        "name": "PR,CURITIBA,,RUA HUMBERTO BERTOLDI",
+        "preco": 205000.0
     },
     {
         "lat": -25.460674121888783,
         "lng": -49.34205352178907,
-        "name": "PR,CURITIBA,,RUA LUIZ TRAMONTIN"
+        "name": "PR,CURITIBA,,RUA LUIZ TRAMONTIN",
+        "preco": 296505.0
     },
     {
         "lat": -25.503762600766525,
         "lng": -49.30930550132776,
-        "name": "PR,CURITIBA,,RUA AGOSTINHO BRUSAMOLIN"
+        "name": "PR,CURITIBA,,RUA AGOSTINHO BRUSAMOLIN",
+        "preco": 320000.0
     },
     {
         "lat": -25.508880685205245,
         "lng": -49.290632765738465,
-        "name": "PR,CURITIBA,,RUA LOTHARIO BOUTIN"
+        "name": "PR,CURITIBA,,RUA LOTHARIO BOUTIN",
+        "preco": 280000.0
     },
     {
         "lat": -25.494711652618477,
         "lng": -49.22292833465005,
-        "name": "PR,CURITIBA,,RUA AMADEU CIPRIANO DA SILVA"
+        "name": "PR,CURITIBA,,RUA AMADEU CIPRIANO DA SILVA",
+        "preco": 539105.0
     },
     {
         "lat": -25.515666274176176,
         "lng": -49.28440847117849,
-        "name": "PR,CURITIBA,,RUA BRASIL PARANA DE CRISTO"
+        "name": "PR,CURITIBA,,RUA BRASIL PARANA DE CRISTO",
+        "preco": 210000.0
     },
     {
         "lat": -25.582450875408895,
         "lng": -49.33195904190397,
-        "name": "PR,CURITIBA,,RUA ANGELO TOZIM"
+        "name": "PR,CURITIBA,,RUA ANGELO TOZIM",
+        "preco": 200000.0
     },
     {
         "lat": -25.366873815945606,
         "lng": -49.23863052784251,
-        "name": "PR,CURITIBA,,RUA THEODORO MAKIOLKA"
+        "name": "PR,CURITIBA,,RUA THEODORO MAKIOLKA",
+        "preco": 215000.0
     },
     {
         "lat": -25.40407211403051,
         "lng": -49.369391571823556,
-        "name": "PR,CURITIBA,,RUA BRASILIO CUMAN"
+        "name": "PR,CURITIBA,,RUA BRASILIO CUMAN",
+        "preco": 1181940.0
     },
     {
         "lat": -25.56702552873063,
         "lng": -49.33026798572585,
-        "name": "PR,CURITIBA,,AVENIDA  STA RITA DE CASSIA DOS IMPOSSIVEIS"
+        "name": "PR,CURITIBA,,AVENIDA  STA RITA DE CASSIA DOS IMPOSSIVEIS",
+        "preco": 110000.0
     },
     {
         "lat": -25.508880685205245,
         "lng": -49.290632765738465,
-        "name": "PR,CURITIBA,,RUA LOTHARIO BOUTIN"
+        "name": "PR,CURITIBA,,RUA LOTHARIO BOUTIN",
+        "preco": 297955.0
     },
     {
         "lat": -25.4092323,
         "lng": -49.2611208,
-        "name": "PR,CURITIBA,,RUA MARECHAL MALLET"
+        "name": "PR,CURITIBA,,RUA MARECHAL MALLET",
+        "preco": 600000.0
     },
     {
         "lat": -25.369171311525797,
         "lng": -49.246337010654926,
-        "name": "PR,CURITIBA,,RUA SAPOPEMA"
+        "name": "PR,CURITIBA,,RUA SAPOPEMA",
+        "preco": 277254.0
     },
     {
         "lat": -25.4432312,
         "lng": -49.361066699999995,
-        "name": "PR,CURITIBA,,RUA IRMA GENOVEVA VALENGA"
+        "name": "PR,CURITIBA,,RUA IRMA GENOVEVA VALENGA",
+        "preco": 173200.0
     },
     {
         "lat": -25.45086162526375,
         "lng": -49.29702721063634,
-        "name": "PR,CURITIBA,,AVENIDA SILVA JARDIM"
+        "name": "PR,CURITIBA,,AVENIDA SILVA JARDIM",
+        "preco": 652028.0
     },
     {
         "lat": -25.437806095182903,
         "lng": -49.33649849457095,
-        "name": "PR,CURITIBA,,RUA PROFESSOR PEDRO VIRIATO PARIGOT DE SOUZA"
+        "name": "PR,CURITIBA,,RUA PROFESSOR PEDRO VIRIATO PARIGOT DE SOUZA",
+        "preco": 432400.0
     },
     {
         "lat": -25.515615120341273,
         "lng": -49.286620378970866,
-        "name": "PR,CURITIBA,,RUA LUCIANO PIUZZI"
+        "name": "PR,CURITIBA,,RUA LUCIANO PIUZZI",
+        "preco": 251000.0
     },
     {
         "lat": -25.435684669800548,
         "lng": -49.26599327263719,
-        "name": "PR,CURITIBA,,AVENIDA VISCONDE DE GUARAPUAVA"
+        "name": "PR,CURITIBA,,AVENIDA VISCONDE DE GUARAPUAVA",
+        "preco": 3618680.0
     }
 ]
