@@ -26,7 +26,7 @@
         data.forEach(function(location) {
             L.marker([location.lat, location.lng])
                 .addTo(map)
-                .bindPopup('<b>' + location.name + '</b>');
+                .bindPopup('<b>' + location.preco + '</b>');
         });
     });
 </script>
