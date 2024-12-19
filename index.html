@@ -35,8 +35,10 @@
             margin-bottom: 20px;
         }
         .filter-group label {
-            display: block;
-            margin-bottom: 5px;
+            margin-left: 5px;
+        }
+        .filter-group input[type="checkbox"] {
+            vertical-align: middle;
         }
     </style>
 </head>
@@ -121,6 +123,7 @@
             var label = document.createElement('label');
             label.htmlFor = 'modalidade-' + modalidade;
             label.textContent = modalidade;
+            filterModalidadeDiv.appendChild(checkbox);
             filterModalidadeDiv.appendChild(label);
         });
 
@@ -137,6 +140,7 @@
             var label = document.createElement('label');
             label.htmlFor = 'tipo-' + tipo;
             label.textContent = tipo;
+            filterTipoDiv.appendChild(checkbox);
             filterTipoDiv.appendChild(label);
         });
     })
