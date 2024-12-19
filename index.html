@@ -7,8 +7,10 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.js"></script>
     <style>
         #map {
             width: calc(100% - 250px);
@@ -26,13 +28,27 @@
             left: 0;
             top: 0;
             z-index: 1000;
+            font-family: Arial, sans-serif;
         }
         .slider-label {
-            margin-top: 10px;
+            margin-top: 20px;
             font-weight: bold;
+            font-size: 14px;
         }
-        .range-input {
+        .slider-container {
+            margin-bottom: 20px;
+        }
+        .noUi-target {
+            margin-top: 10px;
+        }
+        #apply-filters {
             width: 100%;
+            padding: 10px;
+            background-color: #f0c14b;
+            border: 1px solid #a88734;
+            color: #111;
+            font-weight: bold;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -46,17 +62,20 @@
         <h4>Tipo</h4>
         <div id="filter-tipo"></div>
 
-        <h4>Faixa de Preço</h4>
-        <label class="slider-label">Intervalo: <span id="preco-range-value">0 - 1000000</span></label>
-        <input id="preco-range" type="range" class="range-input" min="0" max="1000000" step="10000" value="0,1000000">
+        <div class="slider-container">
+            <label class="slider-label">Faixa de Preço (<span id="preco-range-value">R$0 - R$1.000.000</span>)</label>
+            <div id="preco-range"></div>
+        </div>
 
-        <h4>Faixa de Avaliação</h4>
-        <label class="slider-label">Intervalo: <span id="avaliacao-range-value">0 - 1000000</span></label>
-        <input id="avaliacao-range" type="range" class="range-input" min="0" max="1000000" step="10000" value="0,1000000">
+        <div class="slider-container">
+            <label class="slider-label">Faixa de Avaliação (<span id="avaliacao-range-value">R$0 - R$1.000.000</span>)</label>
+            <div id="avaliacao-range"></div>
+        </div>
 
-        <h4>Faixa de Desconto</h4>
-        <label class="slider-label">Intervalo: <span id="desconto-range-value">0% - 100%</span></label>
-        <input id="desconto-range" type="range" class="range-input" min="0" max="100" step="1" value="0,100">
+        <div class="slider-container">
+            <label class="slider-label">Faixa de Desconto (<span id="desconto-range-value">0% - 100%</span>)</label>
+            <div id="desconto-range"></div>
+        </div>
 
         <button id="apply-filters">Aplicar Filtros</button>
     </div>
@@ -76,6 +95,39 @@
     // Cria o grupo de clusters
     var markers = L.markerClusterGroup();
     var allMarkers = []; // Armazena todos os marcadores para reutilizar
+
+    // Função para criar sliders com noUiSlider
+    function criarSlider(sliderElementId, min, max, step, defaultValues, valueDisplayId) {
+        var slider = document.getElementById(sliderElementId);
+        noUiSlider.create(slider, {
+            start: defaultValues,
+            connect: true,
+            range: {
+                min: min,
+                max: max
+            },
+            step: step,
+            format: {
+                to: function (value) {
+                    return value.toFixed(0);
+                },
+                from: function (value) {
+                    return parseFloat(value);
+                }
+            }
+        });
+
+        slider.noUiSlider.on('update', function (values) {
+            document.getElementById(valueDisplayId).textContent = `R$${values[0]} - R$${values[1]}`;
+        });
+
+        return slider;
+    }
+
+    // Sliders
+    var precoSlider = criarSlider('preco-range', 0, 1000000, 10000, [0, 1000000], 'preco-range-value');
+    var avaliacaoSlider = criarSlider('avaliacao-range', 0, 1000000, 10000, [0, 1000000], 'avaliacao-range-value');
+    var descontoSlider = criarSlider('desconto-range', 0, 100, 1, [0, 100], 'desconto-range-value');
 
     // Carrega os dados do arquivo JSON
     fetch('locations.json?version=' + new Date().getTime())
@@ -157,9 +209,9 @@
     function atualizarMarcadores() {
         var modalidadesSelecionadas = Array.from(document.querySelectorAll('#filter-modalidade input:checked')).map(checkbox => checkbox.value);
         var tiposSelecionados = Array.from(document.querySelectorAll('#filter-tipo input:checked')).map(checkbox => checkbox.value);
-        var precoRange = document.getElementById('preco-range').value.split(',').map(Number);
-        var avaliacaoRange = document.getElementById('avaliacao-range').value.split(',').map(Number);
-        var descontoRange = document.getElementById('desconto-range').value.split(',').map(Number);
+        var precoRange = precoSlider.noUiSlider.get().map(Number);
+        var avaliacaoRange = avaliacaoSlider.noUiSlider.get().map(Number);
+        var descontoRange = descontoSlider.noUiSlider.get().map(Number);
 
         var precoMin = precoRange[0];
         var precoMax = precoRange[1];
@@ -184,17 +236,6 @@
             }
         });
     }
-
-    // Atualiza os valores exibidos nos sliders
-    document.getElementById('preco-range').addEventListener('input', function() {
-        document.getElementById('preco-range-value').textContent = this.value.replace(",", " - ");
-    });
-    document.getElementById('avaliacao-range').addEventListener('input', function() {
-        document.getElementById('avaliacao-range-value').textContent = this.value.replace(",", " - ");
-    });
-    document.getElementById('desconto-range').addEventListener('input', function() {
-        document.getElementById('desconto-range-value').textContent = this.value.replace(",", " - ");
-    });
 
     // Aplica os filtros ao clicar no botão
     document.getElementById('apply-filters').addEventListener('click', atualizarMarcadores);
