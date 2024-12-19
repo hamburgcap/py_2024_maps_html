@@ -35,10 +35,14 @@
             margin-bottom: 20px;
         }
         .filter-group label {
+            display: inline-block;
             margin-left: 5px;
+            margin-bottom: 5px;
         }
-        .filter-group input[type="checkbox"] {
-            vertical-align: middle;
+        .filter-group div {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -112,36 +116,42 @@
         // Preenche os checkboxes de filtros
         var filterModalidadeDiv = document.getElementById('filter-modalidade');
         modalidades.forEach(modalidade => {
+            var container = document.createElement('div');
+
             var checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
             checkbox.value = modalidade;
             checkbox.checked = true;
             checkbox.id = 'modalidade-' + modalidade;
             checkbox.addEventListener('change', atualizarMarcadores);
-            filterModalidadeDiv.appendChild(checkbox);
 
             var label = document.createElement('label');
             label.htmlFor = 'modalidade-' + modalidade;
             label.textContent = modalidade;
-            filterModalidadeDiv.appendChild(checkbox);
-            filterModalidadeDiv.appendChild(label);
+
+            container.appendChild(checkbox);
+            container.appendChild(label);
+            filterModalidadeDiv.appendChild(container);
         });
 
         var filterTipoDiv = document.getElementById('filter-tipo');
         tipos.forEach(tipo => {
+            var container = document.createElement('div');
+
             var checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
             checkbox.value = tipo;
             checkbox.checked = true;
             checkbox.id = 'tipo-' + tipo;
             checkbox.addEventListener('change', atualizarMarcadores);
-            filterTipoDiv.appendChild(checkbox);
 
             var label = document.createElement('label');
             label.htmlFor = 'tipo-' + tipo;
             label.textContent = tipo;
-            filterTipoDiv.appendChild(checkbox);
-            filterTipoDiv.appendChild(label);
+
+            container.appendChild(checkbox);
+            container.appendChild(label);
+            filterTipoDiv.appendChild(container);
         });
     })
     .catch(error => {
