@@ -137,6 +137,8 @@
         return response.json();
     })
     .then(data => {
+        console.log(data); // Para verificar se o JSON está correto
+
         var modalidades = new Set(); // Para coletar modalidades únicas
         var tipos = new Set(); // Para coletar tipos únicos
 
@@ -162,7 +164,7 @@
                 tipo: location.tipo,
                 preco: parseFloat(location.preco.replace(/[^0-9.-]+/g, "")),
                 avaliacao: parseFloat(location.valor_de_avaliacao.replace(/[^0-9.-]+/g, "")),
-                desconto: location.desconto // Adapte o JSON para incluir desconto se não existir
+                desconto: location.desconto || 0 // Adapte o JSON para incluir desconto se não existir
             });
 
             // Adiciona o marcador ao cluster inicialmente
