@@ -39,10 +39,10 @@ def load_rda_file(file_path):
     for key in result.keys():
         return result[key]  # Retorna o primeiro dataframe encontrado
 
-def clean_address(address):
-    """Filtra endereços contendo 'Curitiba', remove tudo após a 4ª vírgula e elimina 'Brasil'."""
-    if ',' not in address:
-        return None  # Ignora endereços que não contêm Curitiba
+def clean_address(address, filters):
+    """Filtra endereços com base em múltiplos critérios e remove tudo após a 4ª vírgula."""
+    if not any(f in address for f in filters):
+        return None  # Ignora endereços que não contêm os filtros especificados
     cleaned = ','.join(address.split(',')[:4])
     return cleaned.replace("Brasil,", "").strip().strip(',')
 
@@ -160,9 +160,10 @@ def main():
             print(f"- n_do_imovel: {key}")
 
     # Processamento dos endereços
+    filters = ['PR,', 'SC,']  # Filtros personalizados para endereços
     for idx, (_, row) in enumerate(df.iterrows(), start=1):
         key = str(row['n_do_imovel'])
-        address = clean_address(row['google_query'])
+        address = clean_address(row['google_query'], filters)
         if not address:
             continue
 
