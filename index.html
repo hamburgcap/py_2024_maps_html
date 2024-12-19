@@ -21,7 +21,7 @@
             width: 250px;
             height: 100vh;
             background: white;
-            padding: 20px;
+            padding: 15px;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
             overflow-y: auto;
             position: fixed;
@@ -29,26 +29,23 @@
             top: 0;
             z-index: 1000;
             font-family: Arial, sans-serif;
+            font-size: 12px;
         }
         .slider-label {
-            margin-top: 20px;
+            margin-top: 10px;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 12px;
         }
         .slider-container {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         .noUi-target {
-            margin-top: 10px;
+            margin-top: 5px;
         }
-        #apply-filters {
-            width: 100%;
-            padding: 10px;
-            background-color: #f0c14b;
-            border: 1px solid #a88734;
-            color: #111;
-            font-weight: bold;
-            cursor: pointer;
+        .slider-values {
+            font-size: 10px;
+            color: gray;
+            margin-top: 5px;
         }
     </style>
 </head>
@@ -63,21 +60,22 @@
         <div id="filter-tipo"></div>
 
         <div class="slider-container">
-            <label class="slider-label">Faixa de Preço (<span id="preco-range-value">R$0 - R$1.000.000</span>)</label>
+            <label class="slider-label">Faixa de Preço</label>
             <div id="preco-range"></div>
+            <div class="slider-values" id="preco-range-value">R$0 - R$1.000.000</div>
         </div>
 
         <div class="slider-container">
-            <label class="slider-label">Faixa de Avaliação (<span id="avaliacao-range-value">R$0 - R$1.000.000</span>)</label>
+            <label class="slider-label">Faixa de Avaliação</label>
             <div id="avaliacao-range"></div>
+            <div class="slider-values" id="avaliacao-range-value">R$0 - R$1.000.000</div>
         </div>
 
         <div class="slider-container">
-            <label class="slider-label">Faixa de Desconto (<span id="desconto-range-value">0% - 100%</span>)</label>
+            <label class="slider-label">Faixa de Desconto</label>
             <div id="desconto-range"></div>
+            <div class="slider-values" id="desconto-range-value">0% - 100%</div>
         </div>
-
-        <button id="apply-filters">Aplicar Filtros</button>
     </div>
 
     <div id="map"></div>
@@ -119,6 +117,7 @@
 
         slider.noUiSlider.on('update', function (values) {
             document.getElementById(valueDisplayId).textContent = `R$${values[0]} - R$${values[1]}`;
+            atualizarMarcadores();
         });
 
         return slider;
@@ -176,6 +175,7 @@
             checkbox.value = modalidade;
             checkbox.checked = true;
             checkbox.id = 'modalidade-' + modalidade;
+            checkbox.addEventListener('change', atualizarMarcadores);
             filterModalidadeDiv.appendChild(checkbox);
 
             var label = document.createElement('label');
@@ -192,6 +192,7 @@
             checkbox.value = tipo;
             checkbox.checked = true;
             checkbox.id = 'tipo-' + tipo;
+            checkbox.addEventListener('change', atualizarMarcadores);
             filterTipoDiv.appendChild(checkbox);
 
             var label = document.createElement('label');
@@ -237,8 +238,6 @@
         });
     }
 
-    // Aplica os filtros ao clicar no botão
-    document.getElementById('apply-filters').addEventListener('click', atualizarMarcadores);
     </script>
 </body>
 </html>
