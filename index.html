@@ -11,44 +11,54 @@
     <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
     <style>
         #map {
-            width: 100%;
-            height: calc(100vh - 50px);
+            width: calc(100% - 300px);
+            height: 100vh;
+            float: right;
         }
-        #filter-modal {
-            position: absolute;
-            top: 10px;
-            left: 10px;
+        #filter-panel {
+            width: 300px;
+            height: 100vh;
             background: white;
-            padding: 10px;
-            border-radius: 8px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            position: fixed;
+            left: 0;
+            top: 0;
             z-index: 1000;
-            display: none;
+            font-family: Arial, sans-serif;
         }
-        #filter-button {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: #007BFF;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            z-index: 1000;
+        #filter-panel h3 {
+            margin-top: 0;
+        }
+        .filter-group {
+            margin-bottom: 20px;
+        }
+        .filter-group label {
+            display: block;
+            margin-bottom: 5px;
         }
     </style>
 </head>
 <body>
-    <button id="filter-button">Filtros</button>
-    <div id="filter-modal">
-        <h3>Filtrar por Modalidade de Venda:</h3>
-        <div id="filter-modalidade"></div>
-        <h3>Filtrar por Tipo:</h3>
-        <div id="filter-tipo"></div>
+    <div id="filter-panel">
+        <h3>Filtros</h3>
+
+        <div class="filter-group">
+            <h4>Modalidade de Venda</h4>
+            <div id="filter-modalidade"></div>
+        </div>
+
+        <div class="filter-group">
+            <h4>Tipo</h4>
+            <div id="filter-tipo"></div>
+        </div>
+
         <button id="apply-filters">Aplicar Filtros</button>
     </div>
+
     <div id="map"></div>
+
     <script>
     // Cria o mapa
     var map = L.map('map').setView([-23.55052, -46.633308], 5);
@@ -107,13 +117,13 @@
             checkbox.value = modalidade;
             checkbox.checked = true;
             checkbox.id = 'modalidade-' + modalidade;
+            checkbox.addEventListener('change', atualizarMarcadores);
             filterModalidadeDiv.appendChild(checkbox);
 
             var label = document.createElement('label');
             label.htmlFor = 'modalidade-' + modalidade;
             label.textContent = modalidade;
             filterModalidadeDiv.appendChild(label);
-            filterModalidadeDiv.appendChild(document.createElement('br'));
         });
 
         var filterTipoDiv = document.getElementById('filter-tipo');
@@ -123,13 +133,13 @@
             checkbox.value = tipo;
             checkbox.checked = true;
             checkbox.id = 'tipo-' + tipo;
+            checkbox.addEventListener('change', atualizarMarcadores);
             filterTipoDiv.appendChild(checkbox);
 
             var label = document.createElement('label');
             label.htmlFor = 'tipo-' + tipo;
             label.textContent = tipo;
             filterTipoDiv.appendChild(label);
-            filterTipoDiv.appendChild(document.createElement('br'));
         });
     })
     .catch(error => {
@@ -152,18 +162,6 @@
         });
     }
 
-    // Exibe ou oculta o modal de filtros
-    var filterButton = document.getElementById('filter-button');
-    var filterModal = document.getElementById('filter-modal');
-    filterButton.addEventListener('click', function() {
-        filterModal.style.display = filterModal.style.display === 'none' ? 'block' : 'none';
-    });
-
-    // Aplica os filtros ao clicar no botão
-    document.getElementById('apply-filters').addEventListener('click', function() {
-        atualizarMarcadores();
-        filterModal.style.display = 'none';
-    });
     </script>
 </body>
 </html>
