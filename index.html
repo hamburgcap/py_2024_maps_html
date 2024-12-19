@@ -59,6 +59,7 @@
         <h4>Tipo</h4>
         <div id="filter-tipo"></div>
 
+<<<<<<< HEAD
         <div class="slider-container">
             <label class="slider-label">Faixa de Preço</label>
             <div id="preco-range"></div>
@@ -76,6 +77,27 @@
             <div id="desconto-range"></div>
             <div class="slider-values" id="desconto-range-value">0% - 100%</div>
         </div>
+=======
+        <h4>Faixa de Preço</h4>
+        <label class="slider-label">Mínimo: <span id="preco-min-value">0</span></label>
+        <input id="preco-min" type="range" class="range-input" min="0" max="1000000" step="10000" value="0">
+        <label class="slider-label">Máximo: <span id="preco-max-value">1000000</span></label>
+        <input id="preco-max" type="range" class="range-input" min="0" max="1000000" step="10000" value="1000000">
+
+        <h4>Faixa de Avaliação</h4>
+        <label class="slider-label">Mínimo: <span id="avaliacao-min-value">0</span></label>
+        <input id="avaliacao-min" type="range" class="range-input" min="0" max="1000000" step="10000" value="0">
+        <label class="slider-label">Máximo: <span id="avaliacao-max-value">1000000</span></label>
+        <input id="avaliacao-max" type="range" class="range-input" min="0" max="1000000" step="10000" value="1000000">
+
+        <h4>Faixa de Desconto</h4>
+        <label class="slider-label">Mínimo: <span id="desconto-min-value">0</span>%</label>
+        <input id="desconto-min" type="range" class="range-input" min="0" max="100" step="1" value="0">
+        <label class="slider-label">Máximo: <span id="desconto-max-value">100</span>%</label>
+        <input id="desconto-max" type="range" class="range-input" min="0" max="100" step="1" value="100">
+
+        <button id="apply-filters">Aplicar Filtros</button>
+>>>>>>> parent of 44584ea (uma barra para maxmin)
     </div>
 
     <div id="map"></div>
@@ -217,6 +239,7 @@
     function atualizarMarcadores() {
         var modalidadesSelecionadas = Array.from(document.querySelectorAll('#filter-modalidade input:checked')).map(checkbox => checkbox.value);
         var tiposSelecionados = Array.from(document.querySelectorAll('#filter-tipo input:checked')).map(checkbox => checkbox.value);
+<<<<<<< HEAD
         var precoRange = precoSlider.noUiSlider.get().map(Number);
         var avaliacaoRange = avaliacaoSlider.noUiSlider.get().map(Number);
         var descontoRange = descontoSlider.noUiSlider.get().map(Number);
@@ -227,6 +250,14 @@
         var avaliacaoMax = avaliacaoRange[1];
         var descontoMin = descontoRange[0];
         var descontoMax = descontoRange[1];
+=======
+        var precoMin = parseFloat(document.getElementById('preco-min').value);
+        var precoMax = parseFloat(document.getElementById('preco-max').value);
+        var avaliacaoMin = parseFloat(document.getElementById('avaliacao-min').value);
+        var avaliacaoMax = parseFloat(document.getElementById('avaliacao-max').value);
+        var descontoMin = parseFloat(document.getElementById('desconto-min').value);
+        var descontoMax = parseFloat(document.getElementById('desconto-max').value);
+>>>>>>> parent of 44584ea (uma barra para maxmin)
 
         // Remove todos os marcadores existentes do cluster
         markers.clearLayers();
@@ -245,6 +276,31 @@
         });
     }
 
+<<<<<<< HEAD
+=======
+    // Atualiza os valores exibidos nos sliders
+    document.getElementById('preco-min').addEventListener('input', function() {
+        document.getElementById('preco-min-value').textContent = this.value;
+    });
+    document.getElementById('preco-max').addEventListener('input', function() {
+        document.getElementById('preco-max-value').textContent = this.value;
+    });
+    document.getElementById('avaliacao-min').addEventListener('input', function() {
+        document.getElementById('avaliacao-min-value').textContent = this.value;
+    });
+    document.getElementById('avaliacao-max').addEventListener('input', function() {
+        document.getElementById('avaliacao-max-value').textContent = this.value;
+    });
+    document.getElementById('desconto-min').addEventListener('input', function() {
+        document.getElementById('desconto-min-value').textContent = this.value;
+    });
+    document.getElementById('desconto-max').addEventListener('input', function() {
+        document.getElementById('desconto-max-value').textContent = this.value;
+    });
+
+    // Aplica os filtros ao clicar no botão
+    document.getElementById('apply-filters').addEventListener('click', atualizarMarcadores);
+>>>>>>> parent of 44584ea (uma barra para maxmin)
     </script>
 </body>
 </html>
