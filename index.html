@@ -130,7 +130,12 @@
 
     // Carrega os dados do arquivo JSON
     fetch('locations.json?version=' + new Date().getTime())
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Erro ao carregar o JSON');
+        }
+        return response.json();
+    })
     .then(data => {
         var modalidades = new Set(); // Para coletar modalidades únicas
         var tipos = new Set(); // Para coletar tipos únicos
