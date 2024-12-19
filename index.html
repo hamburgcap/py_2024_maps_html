@@ -11,44 +11,58 @@
     <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
     <style>
         #map {
-            width: 100%;
-            height: calc(100vh - 50px);
+            width: calc(100% - 250px);
+            height: 100vh;
+            float: right;
         }
-        #filter-modal {
-            position: absolute;
-            top: 10px;
-            left: 10px;
+        #filter-panel {
+            width: 250px;
+            height: 100vh;
             background: white;
-            padding: 10px;
-            border-radius: 8px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            position: fixed;
+            left: 0;
+            top: 0;
             z-index: 1000;
-            display: none;
         }
-        #filter-button {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: #007BFF;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            z-index: 1000;
+        .slider-label {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .range-input {
+            width: 100%;
         }
     </style>
 </head>
 <body>
-    <button id="filter-button">Filtros</button>
-    <div id="filter-modal">
-        <h3>Filtrar por Modalidade de Venda:</h3>
+    <div id="filter-panel">
+        <h3>Filtros</h3>
+
+        <h4>Modalidade de Venda</h4>
         <div id="filter-modalidade"></div>
-        <h3>Filtrar por Tipo:</h3>
+
+        <h4>Tipo</h4>
         <div id="filter-tipo"></div>
+
+        <h4>Faixa de Preço</h4>
+        <label class="slider-label">Intervalo: <span id="preco-range-value">0 - 1000000</span></label>
+        <input id="preco-range" type="range" class="range-input" min="0" max="1000000" step="10000" value="0,1000000">
+
+        <h4>Faixa de Avaliação</h4>
+        <label class="slider-label">Intervalo: <span id="avaliacao-range-value">0 - 1000000</span></label>
+        <input id="avaliacao-range" type="range" class="range-input" min="0" max="1000000" step="10000" value="0,1000000">
+
+        <h4>Faixa de Desconto</h4>
+        <label class="slider-label">Intervalo: <span id="desconto-range-value">0% - 100%</span></label>
+        <input id="desconto-range" type="range" class="range-input" min="0" max="100" step="1" value="0,100">
+
         <button id="apply-filters">Aplicar Filtros</button>
     </div>
+
     <div id="map"></div>
+
     <script>
     // Cria o mapa
     var map = L.map('map').setView([-23.55052, -46.633308], 5);
@@ -89,7 +103,10 @@
             allMarkers.push({
                 marker: marker,
                 modalidade: location.modalidade_de_venda,
-                tipo: location.tipo
+                tipo: location.tipo,
+                preco: parseFloat(location.preco.replace(/[^0-9.-]+/g, "")),
+                avaliacao: parseFloat(location.valor_de_avaliacao.replace(/[^0-9.-]+/g, "")),
+                desconto: location.desconto // Adapte o JSON para incluir desconto se não existir
             });
 
             // Adiciona o marcador ao cluster inicialmente
@@ -140,30 +157,47 @@
     function atualizarMarcadores() {
         var modalidadesSelecionadas = Array.from(document.querySelectorAll('#filter-modalidade input:checked')).map(checkbox => checkbox.value);
         var tiposSelecionados = Array.from(document.querySelectorAll('#filter-tipo input:checked')).map(checkbox => checkbox.value);
+        var precoRange = document.getElementById('preco-range').value.split(',').map(Number);
+        var avaliacaoRange = document.getElementById('avaliacao-range').value.split(',').map(Number);
+        var descontoRange = document.getElementById('desconto-range').value.split(',').map(Number);
+
+        var precoMin = precoRange[0];
+        var precoMax = precoRange[1];
+        var avaliacaoMin = avaliacaoRange[0];
+        var avaliacaoMax = avaliacaoRange[1];
+        var descontoMin = descontoRange[0];
+        var descontoMax = descontoRange[1];
 
         // Remove todos os marcadores existentes do cluster
         markers.clearLayers();
 
         // Adiciona os marcadores correspondentes aos filtros
         allMarkers.forEach(function(item) {
-            if (modalidadesSelecionadas.includes(item.modalidade) && tiposSelecionados.includes(item.tipo)) {
+            if (
+                modalidadesSelecionadas.includes(item.modalidade) &&
+                tiposSelecionados.includes(item.tipo) &&
+                item.preco >= precoMin && item.preco <= precoMax &&
+                item.avaliacao >= avaliacaoMin && item.avaliacao <= avaliacaoMax &&
+                item.desconto >= descontoMin && item.desconto <= descontoMax
+            ) {
                 markers.addLayer(item.marker);
             }
         });
     }
 
-    // Exibe ou oculta o modal de filtros
-    var filterButton = document.getElementById('filter-button');
-    var filterModal = document.getElementById('filter-modal');
-    filterButton.addEventListener('click', function() {
-        filterModal.style.display = filterModal.style.display === 'none' ? 'block' : 'none';
+    // Atualiza os valores exibidos nos sliders
+    document.getElementById('preco-range').addEventListener('input', function() {
+        document.getElementById('preco-range-value').textContent = this.value.replace(",", " - ");
+    });
+    document.getElementById('avaliacao-range').addEventListener('input', function() {
+        document.getElementById('avaliacao-range-value').textContent = this.value.replace(",", " - ");
+    });
+    document.getElementById('desconto-range').addEventListener('input', function() {
+        document.getElementById('desconto-range-value').textContent = this.value.replace(",", " - ");
     });
 
     // Aplica os filtros ao clicar no botão
-    document.getElementById('apply-filters').addEventListener('click', function() {
-        atualizarMarcadores();
-        filterModal.style.display = 'none';
-    });
+    document.getElementById('apply-filters').addEventListener('click', atualizarMarcadores);
     </script>
 </body>
 </html>
