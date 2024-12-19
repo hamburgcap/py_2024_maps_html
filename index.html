@@ -42,7 +42,6 @@
         }
         .filter-group div label {
             margin-left: 8px;
-            display: inline;
         }
         .filter-group input[type="checkbox"] {
             margin: 0;
@@ -132,9 +131,11 @@
             label.htmlFor = 'modalidade-' + modalidade;
             label.textContent = modalidade;
 
+            container.style.display = 'flex';
+            container.style.alignItems = 'center';
+
             container.appendChild(checkbox);
             container.appendChild(label);
-            container.style.display = 'block'; // Força quebra de linha
             filterModalidadeDiv.appendChild(container);
         });
 
@@ -153,9 +154,11 @@
             label.htmlFor = 'tipo-' + tipo;
             label.textContent = tipo;
 
+            container.style.display = 'flex';
+            container.style.alignItems = 'center';
+
             container.appendChild(checkbox);
             container.appendChild(label);
-            container.style.display = 'block'; // Força quebra de linha
             filterTipoDiv.appendChild(container);
         });
     })
