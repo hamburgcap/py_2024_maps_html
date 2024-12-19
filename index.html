@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Mapa de Imóveis da CEF</title>
+    <title>Mapa de Imóveis com Filtros</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -11,7 +11,13 @@
     <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
 </head>
 <body>
-    <h1>Mapa Dinâmico com Clusters</h1>
+    <h1>Mapa Dinâmico com Filtros</h1>
+    <div>
+        <label for="filter">Filtrar por Modalidade de Venda:</label>
+        <select id="filter">
+            <option value="todos">Todos</option>
+        </select>
+    </div>
     <div id="map" style="width: 100%; height: 500px;"></div>
     <script>
     // Cria o mapa
@@ -25,29 +31,64 @@
 
     // Cria o grupo de clusters
     var markers = L.markerClusterGroup();
+    var allMarkers = []; // Armazena todos os marcadores para reutilizar
 
     // Carrega os dados do arquivo JSON
     fetch('locations.json?version=' + new Date().getTime())
     .then(response => response.json())
     .then(data => {
+        var modalidades = new Set(); // Para coletar modalidades únicas
+
         data.forEach(function(location) {
-            // Cria um marcador para cada localização
+            // Adiciona a modalidade ao conjunto
+            modalidades.add(location.modalidade_de_venda);
+
+            // Cria um marcador
             var marker = L.marker([location.lat, location.lng])
                 .bindPopup(
                     '<b>Preço: ' + location.preco + '</b><br>' +
                     '<b>Valor de Avaliação: ' + location.valor_de_avaliacao + '</b><br>' +
                     '<b>Tipo: ' + location.tipo + '</b><br>' +
+                    '<b>Modalidade: ' + location.modalidade_de_venda + '</b><br>' +
                     '<a href="' + location.link_de_acesso + '" target="_blank">Acessar o Imóvel</a>'
                 );
-            // Adiciona o marcador ao cluster
+
+            // Salva o marcador junto com a modalidade
+            allMarkers.push({ marker: marker, modalidade: location.modalidade_de_venda });
+
+            // Adiciona o marcador ao cluster inicialmente
             markers.addLayer(marker);
         });
 
-        // Adiciona o grupo de clusters ao mapa
+        // Adiciona os clusters ao mapa
         map.addLayer(markers);
+
+        // Atualiza o filtro de modalidades
+        var filterSelect = document.getElementById('filter');
+        modalidades.forEach(modalidade => {
+            var option = document.createElement('option');
+            option.value = modalidade;
+            option.textContent = modalidade;
+            filterSelect.appendChild(option);
+        });
     })
     .catch(error => {
         console.error('Erro ao carregar o JSON:', error);
+    });
+
+    // Adiciona evento de filtro
+    document.getElementById('filter').addEventListener('change', function(e) {
+        var selected = e.target.value;
+
+        // Remove todos os marcadores existentes do cluster
+        markers.clearLayers();
+
+        // Adiciona os marcadores correspondentes ao filtro
+        allMarkers.forEach(function(item) {
+            if (selected === 'todos' || item.modalidade === selected) {
+                markers.addLayer(item.marker);
+            }
+        });
     });
     </script>
 </body>
