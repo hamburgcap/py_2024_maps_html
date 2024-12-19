@@ -42,6 +42,7 @@
         }
         .filter-group div label {
             margin-left: 8px;
+            display: inline;
         }
         .filter-group input[type="checkbox"] {
             margin: 0;
@@ -133,6 +134,7 @@
 
             container.appendChild(checkbox);
             container.appendChild(label);
+            container.style.display = 'block'; // Força quebra de linha
             filterModalidadeDiv.appendChild(container);
         });
 
@@ -153,6 +155,7 @@
 
             container.appendChild(checkbox);
             container.appendChild(label);
+            container.style.display = 'block'; // Força quebra de linha
             filterTipoDiv.appendChild(container);
         });
     })
