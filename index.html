@@ -47,22 +47,16 @@
         <div id="filter-tipo"></div>
 
         <h4>Faixa de Preço</h4>
-        <label class="slider-label">Mínimo: <span id="preco-min-value">0</span></label>
-        <input id="preco-min" type="range" class="range-input" min="0" max="1000000" step="10000" value="0">
-        <label class="slider-label">Máximo: <span id="preco-max-value">1000000</span></label>
-        <input id="preco-max" type="range" class="range-input" min="0" max="1000000" step="10000" value="1000000">
+        <label class="slider-label">Intervalo: <span id="preco-range-value">0 - 1000000</span></label>
+        <input id="preco-range" type="range" class="range-input" min="0" max="1000000" step="10000" value="0,1000000">
 
         <h4>Faixa de Avaliação</h4>
-        <label class="slider-label">Mínimo: <span id="avaliacao-min-value">0</span></label>
-        <input id="avaliacao-min" type="range" class="range-input" min="0" max="1000000" step="10000" value="0">
-        <label class="slider-label">Máximo: <span id="avaliacao-max-value">1000000</span></label>
-        <input id="avaliacao-max" type="range" class="range-input" min="0" max="1000000" step="10000" value="1000000">
+        <label class="slider-label">Intervalo: <span id="avaliacao-range-value">0 - 1000000</span></label>
+        <input id="avaliacao-range" type="range" class="range-input" min="0" max="1000000" step="10000" value="0,1000000">
 
         <h4>Faixa de Desconto</h4>
-        <label class="slider-label">Mínimo: <span id="desconto-min-value">0</span>%</label>
-        <input id="desconto-min" type="range" class="range-input" min="0" max="100" step="1" value="0">
-        <label class="slider-label">Máximo: <span id="desconto-max-value">100</span>%</label>
-        <input id="desconto-max" type="range" class="range-input" min="0" max="100" step="1" value="100">
+        <label class="slider-label">Intervalo: <span id="desconto-range-value">0% - 100%</span></label>
+        <input id="desconto-range" type="range" class="range-input" min="0" max="100" step="1" value="0,100">
 
         <button id="apply-filters">Aplicar Filtros</button>
     </div>
@@ -163,12 +157,16 @@
     function atualizarMarcadores() {
         var modalidadesSelecionadas = Array.from(document.querySelectorAll('#filter-modalidade input:checked')).map(checkbox => checkbox.value);
         var tiposSelecionados = Array.from(document.querySelectorAll('#filter-tipo input:checked')).map(checkbox => checkbox.value);
-        var precoMin = parseFloat(document.getElementById('preco-min').value);
-        var precoMax = parseFloat(document.getElementById('preco-max').value);
-        var avaliacaoMin = parseFloat(document.getElementById('avaliacao-min').value);
-        var avaliacaoMax = parseFloat(document.getElementById('avaliacao-max').value);
-        var descontoMin = parseFloat(document.getElementById('desconto-min').value);
-        var descontoMax = parseFloat(document.getElementById('desconto-max').value);
+        var precoRange = document.getElementById('preco-range').value.split(',').map(Number);
+        var avaliacaoRange = document.getElementById('avaliacao-range').value.split(',').map(Number);
+        var descontoRange = document.getElementById('desconto-range').value.split(',').map(Number);
+
+        var precoMin = precoRange[0];
+        var precoMax = precoRange[1];
+        var avaliacaoMin = avaliacaoRange[0];
+        var avaliacaoMax = avaliacaoRange[1];
+        var descontoMin = descontoRange[0];
+        var descontoMax = descontoRange[1];
 
         // Remove todos os marcadores existentes do cluster
         markers.clearLayers();
@@ -188,23 +186,14 @@
     }
 
     // Atualiza os valores exibidos nos sliders
-    document.getElementById('preco-min').addEventListener('input', function() {
-        document.getElementById('preco-min-value').textContent = this.value;
+    document.getElementById('preco-range').addEventListener('input', function() {
+        document.getElementById('preco-range-value').textContent = this.value.replace(",", " - ");
     });
-    document.getElementById('preco-max').addEventListener('input', function() {
-        document.getElementById('preco-max-value').textContent = this.value;
+    document.getElementById('avaliacao-range').addEventListener('input', function() {
+        document.getElementById('avaliacao-range-value').textContent = this.value.replace(",", " - ");
     });
-    document.getElementById('avaliacao-min').addEventListener('input', function() {
-        document.getElementById('avaliacao-min-value').textContent = this.value;
-    });
-    document.getElementById('avaliacao-max').addEventListener('input', function() {
-        document.getElementById('avaliacao-max-value').textContent = this.value;
-    });
-    document.getElementById('desconto-min').addEventListener('input', function() {
-        document.getElementById('desconto-min-value').textContent = this.value;
-    });
-    document.getElementById('desconto-max').addEventListener('input', function() {
-        document.getElementById('desconto-max-value').textContent = this.value;
+    document.getElementById('desconto-range').addEventListener('input', function() {
+        document.getElementById('desconto-range-value').textContent = this.value.replace(",", " - ");
     });
 
     // Aplica os filtros ao clicar no botão
