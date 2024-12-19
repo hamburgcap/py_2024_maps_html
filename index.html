@@ -35,16 +35,14 @@
             margin-bottom: 20px;
         }
         .filter-group div {
-            display: flex;
-            align-items: center;
+            display: block;
             margin-bottom: 10px;
-            flex-direction: row;
         }
-        .filter-group div label {
-            margin-left: 8px;
+        .filter-group label {
+            margin-left: 5px;
         }
         .filter-group input[type="checkbox"] {
-            margin: 0;
+            vertical-align: middle;
         }
     </style>
 </head>
@@ -131,9 +129,6 @@
             label.htmlFor = 'modalidade-' + modalidade;
             label.textContent = modalidade;
 
-            container.style.display = 'flex';
-            container.style.alignItems = 'center';
-
             container.appendChild(checkbox);
             container.appendChild(label);
             filterModalidadeDiv.appendChild(container);
@@ -153,9 +148,6 @@
             var label = document.createElement('label');
             label.htmlFor = 'tipo-' + tipo;
             label.textContent = tipo;
-
-            container.style.display = 'flex';
-            container.style.alignItems = 'center';
 
             container.appendChild(checkbox);
             container.appendChild(label);
