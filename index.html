@@ -62,18 +62,22 @@
         }
 
         .custom-icon {
-            background-color: white;
-            border: 2px solid green;
-            border-radius: 50%;
+            position: relative;
             text-align: center;
-            font-size: 12px;
+        }
+
+        .custom-icon .price-label {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: yellow;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 10px;
             font-weight: bold;
             color: black;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            white-space: nowrap;
         }
 
         @media (max-width: 768px) {
@@ -223,7 +227,7 @@
             // Cria um ícone personalizado com o preço
             var customIcon = L.divIcon({
                 className: 'custom-icon',
-                html: 'R$ ' + location.preco.toLocaleString('pt-BR')
+                html: `<div class="price-label">R$ ${location.preco.toLocaleString('pt-BR')}</div><img src='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png' style='width:25px; height:41px;'>`
             });
 
             // Cria um marcador
