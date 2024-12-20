@@ -211,12 +211,12 @@
                 marker: marker,
                 modalidade: location.modalidade_de_venda,
                 tipo: location.tipo,
-                preco: location.preco,
-                valor_de_avaliacao: location.valor_de_avaliacao,
-                desconto: location.desconto,
-                area_total: location.area_total,
-                area_privativa: location.area_privativa,
-                area_terreno: location.area_terreno
+                preco: location.preco !== null ? location.preco : -1,
+                valor_de_avaliacao: location.valor_de_avaliacao !== null ? location.valor_de_avaliacao : -1,
+                desconto: location.desconto !== null ? location.desconto : -1,
+                area_total: location.area_total !== null ? location.area_total : -1,
+                area_privativa: location.area_privativa !== null ? location.area_privativa : -1,
+                area_terreno: location.area_terreno !== null ? location.area_terreno : -1
             });
 
             // Adiciona o marcador ao cluster inicialmente
