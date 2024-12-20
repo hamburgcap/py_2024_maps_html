@@ -288,11 +288,29 @@
         var areaTerrenoMin = $("#area-terreno-slider").slider("values", 0);
         var areaTerrenoMax = $("#area-terreno-slider").slider("values", 1);
 
+        console.log("Filtros ativos:", {
+            modalidadesSelecionadas,
+            tiposSelecionados,
+            precoMin,
+            precoMax,
+            valuationMin,
+            valuationMax,
+            discountMin,
+            discountMax,
+            areaTotalMin,
+            areaTotalMax,
+            areaPrivativaMin,
+            areaPrivativaMax,
+            areaTerrenoMin,
+            areaTerrenoMax
+        });
+
         // Remove todos os marcadores existentes do cluster
         markers.clearLayers();
 
         // Adiciona os marcadores correspondentes aos filtros
         allMarkers.forEach(function(item) {
+            console.log("Verificando marcador:", item);
             if (
                 modalidadesSelecionadas.includes(item.modalidade) &&
                 tiposSelecionados.includes(item.tipo) &&
@@ -309,7 +327,10 @@
                 item.area_terreno >= areaTerrenoMin &&
                 item.area_terreno <= areaTerrenoMax
             ) {
+                console.log("Marcador aceito:", item);
                 markers.addLayer(item.marker);
+            } else {
+                console.log("Marcador rejeitado:", item);
             }
         });
     }
