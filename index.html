@@ -61,6 +61,21 @@
             border-color: #007bff;
         }
 
+        .custom-icon {
+            background-color: white;
+            border: 2px solid green;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: black;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
         @media (max-width: 768px) {
             #filter-panel {
                 width: 100%;
@@ -205,8 +220,14 @@
             modalidades.add(location.modalidade_de_venda);
             tipos.add(location.tipo);
 
+            // Cria um ícone personalizado com o preço
+            var customIcon = L.divIcon({
+                className: 'custom-icon',
+                html: 'R$ ' + location.preco.toLocaleString('pt-BR')
+            });
+
             // Cria um marcador
-            var marker = L.marker([location.lat, location.lng])
+            var marker = L.marker([location.lat, location.lng], { icon: customIcon })
                 .bindPopup(
                     '<b>Preço: R$' + location.preco + '</b><br>' +
                     '<b>Desconto: ' + location.desconto + '%</b><br>' +
