@@ -9,7 +9,9 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <style>
         #map {
             width: calc(100% - 300px);
@@ -36,17 +38,16 @@
             margin-bottom: 20px;
         }
         .filter-group div {
-            display: block;
             margin-bottom: 10px;
-        }
-        .filter-group label {
-            margin-left: 5px;
-        }
-        .filter-group input[type="checkbox"] {
-            vertical-align: middle;
         }
         .price-range {
             margin-top: 10px;
+        }
+        .ui-slider-range {
+            background: #007bff;
+        }
+        .ui-slider-handle {
+            border-color: #007bff;
         }
     </style>
 </head>
@@ -67,9 +68,8 @@
         <div class="filter-group">
             <h4>Faixa de Preço</h4>
             <div class="price-range">
-                <label for="price-range">R$ <span id="price-min"></span> - R$ <span id="price-max"></span></label>
-                <input type="range" id="price-min-slider" min="0" max="1000000" step="1000" value="0">
-                <input type="range" id="price-max-slider" min="0" max="1000000" step="1000" value="1000000">
+                <label for="price-range">R$ <span id="price-min">0</span> - R$ <span id="price-max">1000000</span></label>
+                <div id="price-slider"></div>
             </div>
         </div>
     </div>
@@ -90,26 +90,22 @@
     var markers = L.markerClusterGroup();
     var allMarkers = []; // Armazena todos os marcadores para reutilizar
 
-    // Atualiza os valores do filtro de preço
-    function updatePriceRange() {
-        document.getElementById('price-min').innerText = document.getElementById('price-min-slider').value;
-        document.getElementById('price-max').innerText = document.getElementById('price-max-slider').value;
-    }
-
-    document.getElementById('price-min-slider').addEventListener('input', function() {
-        if (parseInt(this.value) > parseInt(document.getElementById('price-max-slider').value)) {
-            this.value = document.getElementById('price-max-slider').value;
-        }
-        updatePriceRange();
-        atualizarMarcadores();
-    });
-
-    document.getElementById('price-max-slider').addEventListener('input', function() {
-        if (parseInt(this.value) < parseInt(document.getElementById('price-min-slider').value)) {
-            this.value = document.getElementById('price-min-slider').value;
-        }
-        updatePriceRange();
-        atualizarMarcadores();
+    // Configura o slider de preço
+    $(function() {
+        $("#price-slider").slider({
+            range: true,
+            min: 0,
+            max: 1000000,
+            step: 1000,
+            values: [0, 1000000],
+            slide: function(event, ui) {
+                $("#price-min").text(ui.values[0]);
+                $("#price-max").text(ui.values[1]);
+                atualizarMarcadores();
+            }
+        });
+        $("#price-min").text($("#price-slider").slider("values", 0));
+        $("#price-max").text($("#price-slider").slider("values", 1));
     });
 
     // Carrega os dados do arquivo JSON
@@ -189,8 +185,6 @@
             container.appendChild(label);
             filterTipoDiv.appendChild(container);
         });
-
-        updatePriceRange();
     })
     .catch(error => {
         console.error('Erro ao carregar o JSON:', error);
@@ -200,8 +194,8 @@
     function atualizarMarcadores() {
         var modalidadesSelecionadas = Array.from(document.querySelectorAll('#filter-modalidade input:checked')).map(checkbox => checkbox.value);
         var tiposSelecionados = Array.from(document.querySelectorAll('#filter-tipo input:checked')).map(checkbox => checkbox.value);
-        var precoMin = parseInt(document.getElementById('price-min-slider').value);
-        var precoMax = parseInt(document.getElementById('price-max-slider').value);
+        var precoMin = $("#price-slider").slider("values", 0);
+        var precoMax = $("#price-slider").slider("values", 1);
 
         // Remove todos os marcadores existentes do cluster
         markers.clearLayers();
