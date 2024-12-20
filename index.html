@@ -72,6 +72,46 @@
                 <div id="price-slider"></div>
             </div>
         </div>
+
+        <div class="filter-group">
+            <h4>Faixa de Valor de Avaliação</h4>
+            <div class="price-range">
+                <label for="valuation-range">R$ <span id="valuation-min">0</span> - R$ <span id="valuation-max">1000000</span></label>
+                <div id="valuation-slider"></div>
+            </div>
+        </div>
+
+        <div class="filter-group">
+            <h4>Faixa de Desconto</h4>
+            <div class="price-range">
+                <label for="discount-range"><span id="discount-min">0</span>% - <span id="discount-max">100</span>%</label>
+                <div id="discount-slider"></div>
+            </div>
+        </div>
+
+        <div class="filter-group">
+            <h4>Faixa de Área Total</h4>
+            <div class="price-range">
+                <label for="area-total-range"><span id="area-total-min">0</span> m² - <span id="area-total-max">1000</span> m²</label>
+                <div id="area-total-slider"></div>
+            </div>
+        </div>
+
+        <div class="filter-group">
+            <h4>Faixa de Área Privativa</h4>
+            <div class="price-range">
+                <label for="area-privativa-range"><span id="area-privativa-min">0</span> m² - <span id="area-privativa-max">1000</span> m²</label>
+                <div id="area-privativa-slider"></div>
+            </div>
+        </div>
+
+        <div class="filter-group">
+            <h4>Faixa de Área do Terreno</h4>
+            <div class="price-range">
+                <label for="area-terreno-range"><span id="area-terreno-min">0</span> m² - <span id="area-terreno-max">5000</span> m²</label>
+                <div id="area-terreno-slider"></div>
+            </div>
+        </div>
     </div>
 
     <div id="map"></div>
@@ -90,22 +130,54 @@
     var markers = L.markerClusterGroup();
     var allMarkers = []; // Armazena todos os marcadores para reutilizar
 
-    // Configura o slider de preço
-    $(function() {
-        $("#price-slider").slider({
+    function configureSlider(id, min, max, step, onSlideCallback) {
+        $(id).slider({
             range: true,
-            min: 0,
-            max: 1000000,
-            step: 1000,
-            values: [0, 1000000],
-            slide: function(event, ui) {
-                $("#price-min").text(ui.values[0]);
-                $("#price-max").text(ui.values[1]);
-                atualizarMarcadores();
-            }
+            min: min,
+            max: max,
+            step: step,
+            values: [min, max],
+            slide: onSlideCallback
         });
-        $("#price-min").text($("#price-slider").slider("values", 0));
-        $("#price-max").text($("#price-slider").slider("values", 1));
+    }
+
+    // Configura sliders
+    $(function() {
+        configureSlider("#price-slider", 0, 1000000, 1000, function(event, ui) {
+            $("#price-min").text(ui.values[0]);
+            $("#price-max").text(ui.values[1]);
+            atualizarMarcadores();
+        });
+
+        configureSlider("#valuation-slider", 0, 1000000, 1000, function(event, ui) {
+            $("#valuation-min").text(ui.values[0]);
+            $("#valuation-max").text(ui.values[1]);
+            atualizarMarcadores();
+        });
+
+        configureSlider("#discount-slider", 0, 100, 1, function(event, ui) {
+            $("#discount-min").text(ui.values[0]);
+            $("#discount-max").text(ui.values[1]);
+            atualizarMarcadores();
+        });
+
+        configureSlider("#area-total-slider", 0, 1000, 10, function(event, ui) {
+            $("#area-total-min").text(ui.values[0]);
+            $("#area-total-max").text(ui.values[1]);
+            atualizarMarcadores();
+        });
+
+        configureSlider("#area-privativa-slider", 0, 1000, 10, function(event, ui) {
+            $("#area-privativa-min").text(ui.values[0]);
+            $("#area-privativa-max").text(ui.values[1]);
+            atualizarMarcadores();
+        });
+
+        configureSlider("#area-terreno-slider", 0, 5000, 50, function(event, ui) {
+            $("#area-terreno-min").text(ui.values[0]);
+            $("#area-terreno-max").text(ui.values[1]);
+            atualizarMarcadores();
+        });
     });
 
     // Carrega os dados do arquivo JSON
@@ -125,6 +197,10 @@
                 .bindPopup(
                     '<b>Preço: R$' + location.preco + '</b><br>' +
                     '<b>Valor de Avaliação: R$' + location.valor_de_avaliacao + '</b><br>' +
+                    '<b>Desconto: ' + location.desconto + '%</b><br>' +
+                    '<b>Área Total: ' + location.area_total + ' m²</b><br>' +
+                    '<b>Área Privativa: ' + location.area_privativa + ' m²</b><br>' +
+                    '<b>Área do Terreno: ' + location.area_terreno + ' m²</b><br>' +
                     '<b>Tipo: ' + location.tipo + '</b><br>' +
                     '<b>Modalidade: ' + location.modalidade_de_venda + '</b><br>' +
                     '<a href="' + location.link_de_acesso + '" target="_blank">Acessar o Imóvel</a>'
@@ -135,7 +211,12 @@
                 marker: marker,
                 modalidade: location.modalidade_de_venda,
                 tipo: location.tipo,
-                preco: location.preco
+                preco: location.preco,
+                valor_de_avaliacao: location.valor_de_avaliacao,
+                desconto: location.desconto,
+                area_total: location.area_total,
+                area_privativa: location.area_privativa,
+                area_terreno: location.area_terreno
             });
 
             // Adiciona o marcador ao cluster inicialmente
@@ -196,6 +277,16 @@
         var tiposSelecionados = Array.from(document.querySelectorAll('#filter-tipo input:checked')).map(checkbox => checkbox.value);
         var precoMin = $("#price-slider").slider("values", 0);
         var precoMax = $("#price-slider").slider("values", 1);
+        var valuationMin = $("#valuation-slider").slider("values", 0);
+        var valuationMax = $("#valuation-slider").slider("values", 1);
+        var discountMin = $("#discount-slider").slider("values", 0);
+        var discountMax = $("#discount-slider").slider("values", 1);
+        var areaTotalMin = $("#area-total-slider").slider("values", 0);
+        var areaTotalMax = $("#area-total-slider").slider("values", 1);
+        var areaPrivativaMin = $("#area-privativa-slider").slider("values", 0);
+        var areaPrivativaMax = $("#area-privativa-slider").slider("values", 1);
+        var areaTerrenoMin = $("#area-terreno-slider").slider("values", 0);
+        var areaTerrenoMax = $("#area-terreno-slider").slider("values", 1);
 
         // Remove todos os marcadores existentes do cluster
         markers.clearLayers();
@@ -206,7 +297,17 @@
                 modalidadesSelecionadas.includes(item.modalidade) &&
                 tiposSelecionados.includes(item.tipo) &&
                 item.preco >= precoMin &&
-                item.preco <= precoMax
+                item.preco <= precoMax &&
+                item.valor_de_avaliacao >= valuationMin &&
+                item.valor_de_avaliacao <= valuationMax &&
+                item.desconto >= discountMin &&
+                item.desconto <= discountMax &&
+                item.area_total >= areaTotalMin &&
+                item.area_total <= areaTotalMax &&
+                item.area_privativa >= areaPrivativaMin &&
+                item.area_privativa <= areaPrivativaMax &&
+                item.area_terreno >= areaTerrenoMin &&
+                item.area_terreno <= areaTerrenoMax
             ) {
                 markers.addLayer(item.marker);
             }
