@@ -78,7 +78,7 @@ def get_geolocation(address, user_agents):
                     return lat, lon
                 else:
                     print(f"Resposta vazia para o endereço: {address}")
-                    return None, None
+                    return 0.00, 0.00
             else:
                 print(f"Erro HTTP {response.status_code} para o endereço: {address}")
         except requests.exceptions.RequestException as e:
@@ -160,7 +160,7 @@ def main():
             print(f"- n_do_imovel: {key}")
 
     # Processamento dos endereços
-    filters = ['PR,', 'SC,', 'RJ,']  # Filtros personalizados para endereços
+    filters = ['PR,', 'Curitiba']  # Filtros personalizados para endereços
     for idx, (_, row) in enumerate(df.iterrows(), start=1):
         key = str(row['n_do_imovel'])
         address = clean_address(row['google_query'], filters)
@@ -177,7 +177,7 @@ def main():
         completed += 1
         pending = total_items - completed
 
-        if lat and lng:
+        if lat is not None and lng is not None:
             row_data = {k: str(v) for k, v in row.to_dict().items()}
             row_data.update({"lat": lat, "lng": lng, "name": address})
             locations.append(row_data)
