@@ -160,7 +160,7 @@ def main():
             print(f"- n_do_imovel: {key}")
 
     # Processamento dos endereços
-    filters = ['PR,', 'SC,', 'RJ,', 'SP,','RS,','MG,']  # Filtros personalizados para endereços
+    filters = [',']  # Filtros personalizados para endereços
     for idx, (_, row) in enumerate(df.iterrows(), start=1):
         key = str(row['n_do_imovel'])
         address = clean_address(row['google_query'], filters)
