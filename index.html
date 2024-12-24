@@ -12,6 +12,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             margin: 0;
@@ -252,22 +253,22 @@
             tipos.add(location.tipo);
 
             // Escolhe o ícone com base no tipo de imóvel
-            let iconUrl;
+            let iconHtml;
             if (['Casa', 'Apartamento', 'Sobrado', 'Prédio'].includes(location.tipo)) {
-                iconUrl = 'https://raw.githubusercontent.com/hamburgcap/py_2024_maps_html/main/icons/residential.svg';
+                iconHtml = '<i class="fas fa-home" style="font-size: 20px; color: #007bff;"></i>';
             } else if (['Loja', 'Comercial', 'Sala', 'Galpão'].includes(location.tipo)) {
-                iconUrl = 'https://raw.githubusercontent.com/hamburgcap/py_2024_maps_html/main/icons/commercial.svg';
+                iconHtml = '<i class="fas fa-store" style="font-size: 20px; color: #28a745;"></i>';
             } else if (['Terreno', 'Gleba', 'Gleba Urbana', 'Imóvel Rural'].includes(location.tipo)) {
-                iconUrl = 'https://raw.githubusercontent.com/hamburgcap/py_2024_maps_html/main/icons/rural.svg';
+                iconHtml = '<i class="fas fa-tractor" style="font-size: 20px; color: #ffc107;"></i>';
             } else {
-                iconUrl = 'https://raw.githubusercontent.com/hamburgcap/py_2024_maps_html/main/icons/generic.svg';
+                iconHtml = '<i class="fas fa-map-marker-alt" style="font-size: 20px; color: #dc3545;"></i>';
             }
 
-            var customIcon = L.icon({
-                iconUrl: iconUrl,
+            var customIcon = L.divIcon({
+                className: 'custom-icon',
+                html: iconHtml,
                 iconSize: [30, 30],
-                iconAnchor: [15, 30],
-                popupAnchor: [0, -30]
+                iconAnchor: [15, 30]
             });
 
             // Cria um marcador
