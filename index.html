@@ -255,13 +255,13 @@
             // Escolhe o ícone com base no tipo de imóvel
             let iconHtml;
             if (['Casa', 'Apartamento', 'Sobrado', 'Prédio'].includes(location.tipo)) {
-                iconHtml = '<i class="fas fa-home" style="font-size: 20px; color: #007bff;"></i>';
+                iconHtml = '<i class="fas fa-home" style="font-size: 30px; color: #00008B;"></i>';
             } else if (['Loja', 'Comercial', 'Sala', 'Galpão'].includes(location.tipo)) {
-                iconHtml = '<i class="fas fa-store" style="font-size: 20px; color: #28a745;"></i>';
+                iconHtml = '<i class="fas fa-store" style="font-size: 30px; color: #00008B;"></i>';
             } else if (['Terreno', 'Gleba', 'Gleba Urbana', 'Imóvel Rural'].includes(location.tipo)) {
-                iconHtml = '<i class="fas fa-tractor" style="font-size: 20px; color: #ffc107;"></i>';
+                iconHtml = '<i class="fas fa-tractor" style="font-size: 30px; color: #00008B;"></i>';
             } else {
-                iconHtml = '<i class="fas fa-map-marker-alt" style="font-size: 20px; color: #dc3545;"></i>';
+                iconHtml = '<i class="fas fa-map-marker-alt" style="font-size: 30px; color: #00008B;"></i>';
             }
 
             var customIcon = L.divIcon({
