@@ -254,13 +254,13 @@
             // Escolhe o ícone com base no tipo de imóvel
             let iconUrl;
             if (['Casa', 'Apartamento', 'Sobrado', 'Prédio'].includes(location.tipo)) {
-                iconUrl = 'https://path-to-residential-icon.svg';
+                iconUrl = 'https://raw.githubusercontent.com/hamburgcap/py_2024_maps_html/main/icons/residential.svg';
             } else if (['Loja', 'Comercial', 'Sala', 'Galpão'].includes(location.tipo)) {
-                iconUrl = 'https://path-to-commercial-icon.svg';
+                iconUrl = 'https://raw.githubusercontent.com/hamburgcap/py_2024_maps_html/main/icons/commercial.svg';
             } else if (['Terreno', 'Gleba', 'Gleba Urbana', 'Imóvel Rural'].includes(location.tipo)) {
-                iconUrl = 'https://path-to-rural-icon.svg';
+                iconUrl = 'https://raw.githubusercontent.com/hamburgcap/py_2024_maps_html/main/icons/rural.svg';
             } else {
-                iconUrl = 'https://path-to-generic-icon.svg';
+                iconUrl = 'https://raw.githubusercontent.com/hamburgcap/py_2024_maps_html/main/icons/generic.svg';
             }
 
             var customIcon = L.icon({
