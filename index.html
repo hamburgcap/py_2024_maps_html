@@ -251,10 +251,23 @@
             modalidades.add(location.modalidade_de_venda);
             tipos.add(location.tipo);
 
-            // Cria um ícone personalizado com o preço
-            var customIcon = L.divIcon({
-                className: 'custom-icon',
-                html: `<div class="price-label">R$ ${location.preco.toLocaleString('pt-BR')}</div><img src='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png' style='width:25px; height:41px;'>`
+            // Escolhe o ícone com base no tipo de imóvel
+            let iconUrl;
+            if (['Casa', 'Apartamento', 'Sobrado', 'Prédio'].includes(location.tipo)) {
+                iconUrl = 'https://path-to-residential-icon.svg';
+            } else if (['Loja', 'Comercial', 'Sala', 'Galpão'].includes(location.tipo)) {
+                iconUrl = 'https://path-to-commercial-icon.svg';
+            } else if (['Terreno', 'Gleba', 'Gleba Urbana', 'Imóvel Rural'].includes(location.tipo)) {
+                iconUrl = 'https://path-to-rural-icon.svg';
+            } else {
+                iconUrl = 'https://path-to-generic-icon.svg';
+            }
+
+            var customIcon = L.icon({
+                iconUrl: iconUrl,
+                iconSize: [30, 30],
+                iconAnchor: [15, 30],
+                popupAnchor: [0, -30]
             });
 
             // Cria um marcador
