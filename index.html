@@ -283,7 +283,7 @@
             // Adiciona indicador de desconto, se aplicável
             let discountHtml = '';
             if (location.desconto >= 30) {
-                discountHtml = '<div class="discount-label">' + location.desconto + '%</div>';
+                discountHtml = '<div class="discount-label">' + Math.round(location.desconto) + '%</div>';
             }
 
             var customIcon = L.divIcon({
