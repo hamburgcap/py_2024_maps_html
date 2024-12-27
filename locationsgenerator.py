@@ -132,6 +132,7 @@ def main():
 
     # Carregar locais já existentes
     existing_locations = load_existing_locations()
+    print(f"Número de itens no locations.json: {len(existing_locations)}")
     existing_keys = {str(entry.get('n_do_imovel', 'NULL')) for entry in existing_locations}
 
     # Passo 1: Selecionar o arquivo Rda
@@ -142,6 +143,7 @@ def main():
 
     # Passo 2: Carregar o arquivo Rda
     df = load_rda_file(file_path).fillna('NULL')
+    print(f"Número de itens no df.Rda: {len(df)}")
 
     if 'google_query' not in df.columns or 'n_do_imovel' not in df.columns:
         print("As colunas necessárias ('google_query', 'n_do_imovel') não foram encontradas no arquivo.")
@@ -160,7 +162,7 @@ def main():
             print(f"- n_do_imovel: {key}")
 
     # Processamento dos endereços
-    filters = [',']  # Filtros personalizados para endereços
+    filters = ['PR,', 'Curitiba']  # Filtros personalizados para endereços
     for idx, (_, row) in enumerate(df.iterrows(), start=1):
         key = str(row['n_do_imovel'])
         address = clean_address(row['google_query'], filters)
@@ -194,9 +196,15 @@ def main():
 
         time.sleep(random.randint(10, 20))
 
+    # Filtrar locations.json para manter apenas itens do df.Rda
+    df_keys = set(df['n_do_imovel'].astype(str))
+    locations = [loc for loc in locations if str(loc.get('n_do_imovel', 'NULL')) in df_keys]
+
     with open('locations.json', 'w', encoding='utf-8') as f:
         json.dump(locations, f, ensure_ascii=False, indent=4)
+    print(f"\nNúmero de itens no novo arquivo locations.json: {len(locations)}")
     print(f"\nExecução concluída: {format_elapsed_time(time.time() - start_time)}")
+    print(f"\nNúmero de itens no df.Rda: {len(df)}")
 
 if __name__ == "__main__":
     main()
