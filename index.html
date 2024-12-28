@@ -7,49 +7,33 @@
     <script src="https://www.gstatic.com/firebasejs/9.x/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.x/firebase-auth.js"></script>
     <script>
-        // Aguarde o carregamento completo do DOM antes de inicializar o Firebase
-        document.addEventListener("DOMContentLoaded", () => {
-            // Configuração do Firebase
-            const firebaseConfig = {
-                apiKey: "AIzaSyAwVI2G9I_2ThVcHPCFiqVQfYNYZvfPgvg",
-                authDomain: "rotadosleiloes.firebaseapp.com",
-                projectId: "rotadosleiloes",
-                storageBucket: "rotadosleiloes.firebasestorage.app",
-                messagingSenderId: "1022316924185",
-                appId: "1:1022316924185:web:72194a4fe18508c104c988",
-                measurementId: "G-D5NQPEWTZQ"
-            };
+        // Configuração do Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAwVI2G9I_2ThVcHPCFiqVQfYNYZvfPgvg",
+            authDomain: "rotadosleiloes.firebaseapp.com",
+            projectId: "rotadosleiloes",
+            storageBucket: "rotadosleiloes.firebasestorage.app",
+            messagingSenderId: "1022316924185",
+            appId: "1:1022316924185:web:72194a4fe18508c104c988",
+            measurementId: "G-D5NQPEWTZQ"
+        };
 
-            // Inicializa o Firebase
-            firebase.initializeApp(firebaseConfig);
+        // Inicializa o Firebase
+        firebase.initializeApp(firebaseConfig);
 
-            // Inicializa o serviço de autenticação
-            const auth = firebase.auth();
+        // Função para login
+        async function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
-            // Função para login
-            async function login() {
-                const email = document.getElementById('email').value;
-                const password = document.getElementById('password').value;
-
-                try {
-                    const userCredential = await auth.signInWithEmailAndPassword(email, password);
-                    alert(`Bem-vindo, ${userCredential.user.email}`);
-                    window.location.href = 'mapa/index.html'; // Redireciona para a página protegida
-                } catch (error) {
-                    document.getElementById('error-message').innerText = `Erro: ${error.message}`;
-                }
+            try {
+                const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+                alert(`Bem-vindo, ${userCredential.user.email}`);
+                window.location.href = 'mapa/index.html'; // Redireciona para a página protegida
+            } catch (error) {
+                document.getElementById('error-message').innerText = `Erro: ${error.message}`;
             }
-
-            // Verifica o estado do usuário
-            auth.onAuthStateChanged(user => {
-                if (user) {
-                    console.log(`Usuário autenticado: ${user.email}`);
-                }
-            });
-
-            // Adiciona o evento ao botão
-            document.getElementById('login-button').addEventListener('click', login);
-        });
+        }
     </script>
     <style>
         body {
@@ -104,7 +88,7 @@
         <form id="loginForm">
             <input type="email" id="email" placeholder="E-mail" required />
             <input type="password" id="password" placeholder="Senha" required />
-            <button type="button" id="login-button">Entrar</button>
+            <button type="button" onclick="login()">Entrar</button>
         </form>
         <p id="error-message"></p>
     </div>
