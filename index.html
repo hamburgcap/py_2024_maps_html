@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Rota dos Leilões</title>
-    <script src="https://www.gstatic.com/firebasejs/9.x/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.x/firebase-auth.js"></script>
+    <!-- Scripts do Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js"></script>
     <script>
         // Configuração do Firebase
         const firebaseConfig = {
@@ -19,7 +20,18 @@
         };
 
         // Inicializa o Firebase
-        firebase.initializeApp(firebaseConfig);
+        let firebaseApp;
+        let auth;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            try {
+                firebaseApp = firebase.initializeApp(firebaseConfig);
+                auth = firebase.auth();
+                console.log("Firebase carregado com sucesso.");
+            } catch (error) {
+                console.error("Erro ao carregar o Firebase:", error);
+            }
+        });
 
         // Função para login
         async function login() {
@@ -27,7 +39,7 @@
             const password = document.getElementById('password').value;
 
             try {
-                const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
                 alert(`Bem-vindo, ${userCredential.user.email}`);
                 window.location.href = 'mapa/index.html'; // Redireciona para a página protegida
             } catch (error) {
@@ -84,7 +96,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Login</h1>
+        <h1>Login x</h1>
         <form id="loginForm">
             <input type="email" id="email" placeholder="E-mail" required />
             <input type="password" id="password" placeholder="Senha" required />
