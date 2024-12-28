@@ -4,51 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Rota dos Leilões</title>
-    <!-- Scripts do Firebase -->
+    <!-- Scripts CDN do Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-analytics.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js"></script>
     <script>
-        let auth;
+        // Configuração do Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAwVI2G9I_2ThVcHPCFiqVQfYNYZvfPgvg",
+            authDomain: "rotadosleiloes.firebaseapp.com",
+            projectId: "rotadosleiloes",
+            storageBucket: "rotadosleiloes.firebasestorage.app",
+            messagingSenderId: "1022316924185",
+            appId: "1:1022316924185:web:72194a4fe18508c104c988",
+            measurementId: "G-D5NQPEWTZQ"
+        };
 
-        document.addEventListener("DOMContentLoaded", () => {
-            try {
-                // Configuração do Firebase
-                const firebaseConfig = {
-                    apiKey: "AIzaSyAwVI2G9I_2ThVcHPCFiqVQfYNYZvfPgvg",
-                    authDomain: "rotadosleiloes.firebaseapp.com",
-                    projectId: "rotadosleiloes",
-                    storageBucket: "rotadosleiloes.firebasestorage.app",
-                    messagingSenderId: "1022316924185",
-                    appId: "1:1022316924185:web:72194a4fe18508c104c988",
-                    measurementId: "G-D5NQPEWTZQ"
-                };
-
-                // Inicializa o Firebase
-                const app = firebase.initializeApp(firebaseConfig);
-                console.log("Firebase inicializado:", app.name);
-
-                // Inicializa o serviço de autenticação
-                auth = firebase.auth();
-                console.log("Auth inicializado com sucesso.");
-            } catch (error) {
-                console.error("Erro ao inicializar o Firebase:", error);
-                document.getElementById('error-message').innerText = "Erro ao conectar com o sistema de autenticação.";
-            }
-        });
+        // Inicializa o Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const analytics = firebase.getAnalytics(app);
+        const auth = firebase.getAuth(app);
 
         // Função para login
         async function login() {
-            if (!auth) {
-                console.error("Firebase Auth não foi inicializado.");
-                document.getElementById('error-message').innerText = "Erro ao conectar com o sistema de autenticação.";
-                return;
-            }
-
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
             try {
-                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                const userCredential = await firebase.signInWithEmailAndPassword(auth, email, password);
                 alert(`Bem-vindo, ${userCredential.user.email}`);
                 window.location.href = 'mapa/index.html'; // Redireciona para a página protegida
             } catch (error) {
