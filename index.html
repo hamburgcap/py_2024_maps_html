@@ -21,7 +21,7 @@
         // Inicializa o Firebase
         firebase.initializeApp(firebaseConfig);
 
-        // Referência à autenticação
+        // Inicializa o serviço de autenticação do Firebase
         const auth = firebase.auth();
 
         // Função para login
@@ -38,7 +38,7 @@
             }
         }
 
-        // Função para verificar usuário autenticado
+        // Verifica o estado do usuário
         auth.onAuthStateChanged(user => {
             if (user) {
                 console.log(`Usuário autenticado: ${user.email}`);
