@@ -8,33 +8,36 @@
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js"></script>
     <script>
-        // Configuração do Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyAwVI2G9I_2ThVcHPCFiqVQfYNYZvfPgvg",
-            authDomain: "rotadosleiloes.firebaseapp.com",
-            projectId: "rotadosleiloes",
-            storageBucket: "rotadosleiloes.firebasestorage.app",
-            messagingSenderId: "1022316924185",
-            appId: "1:1022316924185:web:72194a4fe18508c104c988",
-            measurementId: "G-D5NQPEWTZQ"
-        };
-
         let auth;
 
-        // Inicializa o Firebase
         document.addEventListener("DOMContentLoaded", () => {
             try {
-                const firebaseApp = firebase.initializeApp(firebaseConfig);
+                // Configuração do Firebase
+                const firebaseConfig = {
+                    apiKey: "AIzaSyAwVI2G9I_2ThVcHPCFiqVQfYNYZvfPgvg",
+                    authDomain: "rotadosleiloes.firebaseapp.com",
+                    projectId: "rotadosleiloes",
+                    storageBucket: "rotadosleiloes.firebasestorage.app",
+                    messagingSenderId: "1022316924185",
+                    appId: "1:1022316924185:web:72194a4fe18508c104c988",
+                    measurementId: "G-D5NQPEWTZQ"
+                };
+
+                // Inicializa o Firebase
+                const app = firebase.initializeApp(firebaseConfig);
+                console.log("Firebase inicializado:", app.name);
+
+                // Inicializa o serviço de autenticação
                 auth = firebase.auth();
-                console.log("Firebase inicializado com sucesso.");
+                console.log("Auth inicializado com sucesso.");
             } catch (error) {
                 console.error("Erro ao inicializar o Firebase:", error);
+                document.getElementById('error-message').innerText = "Erro ao conectar com o sistema de autenticação.";
             }
         });
 
         // Função para login
         async function login() {
-            // Verifica se o Firebase foi inicializado corretamente
             if (!auth) {
                 console.error("Firebase Auth não foi inicializado.");
                 document.getElementById('error-message').innerText = "Erro ao conectar com o sistema de autenticação.";
@@ -102,7 +105,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Login y</h1>
+        <h1>Login</h1>
         <form id="loginForm">
             <input type="email" id="email" placeholder="E-mail" required />
             <input type="password" id="password" placeholder="Senha" required />
