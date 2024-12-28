@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Rota dos Leilões</title>
     <!-- Scripts do Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script>
         // Configuração do Firebase
         const firebaseConfig = {
@@ -20,7 +20,7 @@
         };
 
         // Inicializa o Firebase
-        const app = firebase.initializeApp(firebaseConfig);
+        firebase.initializeApp(firebaseConfig);
 
         // Inicializa o serviço de autenticação
         const auth = firebase.auth();
@@ -31,7 +31,7 @@
             const password = document.getElementById('password').value;
 
             try {
-                const userCredential = await firebase.auth().signInWithEmailAndPassword(auth, email, password);
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
                 alert(`Bem-vindo, ${userCredential.user.email}`);
                 window.location.href = 'mapa/index.html'; // Redireciona para a página protegida
             } catch (error) {
@@ -88,7 +88,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Login 7</h1>
+        <h1>Login</h1>
         <form id="loginForm">
             <input type="email" id="email" placeholder="E-mail" required />
             <input type="password" id="password" placeholder="Senha" required />
