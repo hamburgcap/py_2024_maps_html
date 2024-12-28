@@ -19,22 +19,28 @@
             measurementId: "G-D5NQPEWTZQ"
         };
 
-        // Inicializa o Firebase
-        let firebaseApp;
         let auth;
 
+        // Inicializa o Firebase
         document.addEventListener("DOMContentLoaded", () => {
             try {
-                firebaseApp = firebase.initializeApp(firebaseConfig);
+                const firebaseApp = firebase.initializeApp(firebaseConfig);
                 auth = firebase.auth();
-                console.log("Firebase carregado com sucesso.");
+                console.log("Firebase inicializado com sucesso.");
             } catch (error) {
-                console.error("Erro ao carregar o Firebase:", error);
+                console.error("Erro ao inicializar o Firebase:", error);
             }
         });
 
         // Função para login
         async function login() {
+            // Verifica se o Firebase foi inicializado corretamente
+            if (!auth) {
+                console.error("Firebase Auth não foi inicializado.");
+                document.getElementById('error-message').innerText = "Erro ao conectar com o sistema de autenticação.";
+                return;
+            }
+
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
@@ -96,7 +102,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Login x</h1>
+        <h1>Login y</h1>
         <form id="loginForm">
             <input type="email" id="email" placeholder="E-mail" required />
             <input type="password" id="password" placeholder="Senha" required />
