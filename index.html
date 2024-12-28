@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Rota dos Leiloes - Mapa Interativo</title>
+    <title>Mapa de Imóveis com Filtros</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -23,7 +23,7 @@
         #top-bar {
             width: 100%;
             height: 60px;
-            background-color: #007bff;
+            background-color: #40E0D0; /* Azul turquesa */
             color: white;
             display: flex;
             align-items: center;
@@ -108,11 +108,11 @@
         }
 
         .ui-slider-range {
-            background: #007bff;
+            background: #40E0D0; /* Azul turquesa */
         }
 
         .ui-slider-handle {
-            border-color: #007bff;
+            border-color: #40E0D0; /* Azul turquesa */
         }
 
         .custom-icon {
@@ -206,7 +206,7 @@
     <div id="top-bar">
         <button class="toggle-button" onclick="toggleFilterPanel()"><i class="fas fa-bars"></i></button>
         <div class="logo">
-            <img src="logo.png" alt="Logo">
+            <img src="https://hamburgcap.com/py_2024_maps_html/logo.png" alt="Logo">
             <span>Mapa de Imóveis</span>
         </div>
     </div>
@@ -320,13 +320,13 @@
             // Escolhe o ícone com base no tipo de imóvel
             let iconHtml;
             if (['Casa', 'Apartamento', 'Sobrado', 'Prédio'].includes(location.tipo)) {
-                iconHtml = '<i class="fas fa-home" style="font-size: 30px; color: #00008B;"></i>';
+                iconHtml = '<i class="fas fa-home" style="font-size: 30px; color: #40E0D0;"></i>';
             } else if (['Loja', 'Comercial', 'Sala', 'Galpão'].includes(location.tipo)) {
-                iconHtml = '<i class="fas fa-store" style="font-size: 30px; color: #00008B;"></i>';
+                iconHtml = '<i class="fas fa-store" style="font-size: 30px; color: #40E0D0;"></i>';
             } else if (['Terreno', 'Gleba', 'Gleba Urbana', 'Imóvel Rural'].includes(location.tipo)) {
-                iconHtml = '<i class="fas fa-tractor" style="font-size: 30px; color: #00008B;"></i>';
+                iconHtml = '<i class="fas fa-tractor" style="font-size: 30px; color: #40E0D0;"></i>';
             } else {
-                iconHtml = '<i class="fas fa-map-marker-alt" style="font-size: 30px; color: #00008B;"></i>';
+                iconHtml = '<i class="fas fa-map-marker-alt" style="font-size: 30px; color: #40E0D0;"></i>';
             }
 
             // Adiciona indicador de desconto, se aplicável
