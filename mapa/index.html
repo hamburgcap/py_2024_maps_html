@@ -101,16 +101,8 @@
 
 #filter-panel {
     width: 350px;
-    height: calc(100vh - 60px); /* Ajusta ao restante da tela */
-    overflow-y: auto;
-    position: fixed;
-    left: 0;
-    top: 60px;
-    z-index: 1000;
-    box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
-    background: white;
+    max-width: 100%;
 }
-
         #filter-panel.hidden {
             transform: translateX(-100%);
         }
