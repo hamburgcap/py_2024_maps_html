@@ -50,10 +50,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
-            margin: 0;
-            font-family: 'Roboto', Arial, sans-serif;
-            background-color: #f5f5f5;
-        }
+    margin: 0;
+    overflow: hidden; /* Remove barras de rolagem desnecessárias */
+}
 
         #top-bar {
             width: 100%;
@@ -89,24 +88,28 @@
         }
 
         #map {
-            width: 100%;
-            height: calc(100vh - 60px);
-            float: right;
-        }
+    width: 100%;
+    height: calc(100vh - 60px); /* Usa a altura total da tela menos a barra superior */
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    bottom: 0; /* Garante que o mapa ocupe todo o espaço */
+    margin: 0;
+    padding: 0;
+}
 
-        #filter-panel {
-            width: 350px;
-            height: calc(100vh - 60px);
-            background: white;
-            padding: 20px;
-            box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
-            overflow-y: auto;
-            position: fixed;
-            left: 0;
-            top: 60px;
-            z-index: 1000;
-            transition: transform 0.3s ease;
-        }
+#filter-panel {
+    width: 350px;
+    height: calc(100vh - 60px); /* Ajusta ao restante da tela */
+    overflow-y: auto;
+    position: fixed;
+    left: 0;
+    top: 60px;
+    z-index: 1000;
+    box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
+    background: white;
+}
 
         #filter-panel.hidden {
             transform: translateX(-100%);
