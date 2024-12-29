@@ -50,8 +50,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
-    margin: 0;
-    overflow: hidden; /* Remove barras de rolagem desnecessárias */
+    overflow-x: hidden; /* Remove qualquer barra de rolagem horizontal */
 }
 
         #top-bar {
@@ -87,30 +86,16 @@
             left: 20px;
         }
 
-        #map {
-    width: 100%;
-    height: calc(100vh - 60px); /* Usa a altura total da tela menos a barra superior */
-    position: absolute;
-    top: 60px;
-    left: 0;
-    right: 0;
-    bottom: 0; /* Garante que o mapa ocupe todo o espaço */
+#map {
     margin: 0;
     padding: 0;
+    width: calc(100vw - 350px); /* Ajusta à largura do filtro */
 }
 
 #filter-panel {
     width: 350px;
-    height: calc(100vh - 60px); /* Ajusta ao restante da tela */
-    overflow-y: auto;
-    position: fixed;
-    left: 0;
-    top: 60px;
-    z-index: 1000;
-    box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
-    background: white;
+    max-width: 100%;
 }
-
         #filter-panel.hidden {
             transform: translateX(-100%);
         }
