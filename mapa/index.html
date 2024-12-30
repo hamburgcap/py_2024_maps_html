@@ -23,7 +23,7 @@
   auth.onAuthStateChanged(user => {
       if (!user) {
           alert('Você precisa estar logado para acessar esta página.');
-          window.location.href = '../index.html'; // Redireciona para a página de login
+          window.location.href = '../login.html'; // Redireciona para a página de login
       }
   });
 
@@ -31,7 +31,7 @@
   function logout() {
       auth.signOut().then(() => {
           alert('Você saiu com sucesso.');
-          window.location.href = '../index.html'; // Redireciona para a página de login
+          window.location.href = '../login.html'; // Redireciona para a página de login
       });
   }
 </script>
