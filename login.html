@@ -65,6 +65,8 @@
                     toggleForm(); // Volta para o formulário de login após cadastro
                 }
             } catch (error) {
+                console.error('Código de erro:', error.code);
+                console.error('Mensagem de erro:', error.message);
                 const errorMessage = formatFirebaseError(error);
                 document.getElementById('error-message').innerText = `Erro: ${errorMessage}`;
             }
@@ -74,9 +76,9 @@
         function formatFirebaseError(error) {
             switch (error.code) {
                 case 'auth/invalid-email':
-                    return 'O endereço de e-mail não é válido.';
+                    return 'O endereço de e-mail não é válido. Verifique e tente novamente.';
                 case 'auth/user-disabled':
-                    return 'Esta conta de usuário foi desativada.';
+                    return 'Esta conta de usuário foi desativada. Entre em contato com o suporte.';
                 case 'auth/user-not-found':
                     return 'Usuário não encontrado. Verifique o e-mail e tente novamente.';
                 case 'auth/wrong-password':
@@ -85,8 +87,14 @@
                     return 'O e-mail já está em uso por outra conta.';
                 case 'auth/weak-password':
                     return 'A senha é muito fraca. Use uma senha mais forte.';
+                case 'auth/operation-not-allowed':
+                    return 'Operação não permitida. Entre em contato com o suporte.';
+                case 'auth/internal-error':
+                    return 'Ocorreu um erro interno. Tente novamente mais tarde.';
+                case 'auth/too-many-requests':
+                    return 'Muitas tentativas falhas. Tente novamente mais tarde.';
                 default:
-                    return 'Ocorreu um erro inesperado. Tente novamente.';
+                    return `Erro desconhecido: ${error.message}`;
             }
         }
     </script>
