@@ -25,17 +25,51 @@
         // Inicializa o serviço de autenticação
         const auth = firebase.auth();
 
-        // Função para login
-        async function login() {
+        // Controle do modo atual (login ou cadastro)
+        let isLogin = true;
+
+        // Alterna entre Login e Cadastro
+        function toggleForm() {
+            isLogin = !isLogin;
+
+            const formTitle = document.getElementById('form-title');
+            const formButton = document.getElementById('form-button');
+            const toggleMessage = document.getElementById('toggle-message');
+
+            if (isLogin) {
+                formTitle.innerText = 'Login';
+                formButton.innerText = 'Entrar';
+                toggleMessage.innerHTML = 'Não tem uma conta? <a href="#" onclick="toggleForm()">Cadastrar</a>';
+            } else {
+                formTitle.innerText = 'Cadastro';
+                formButton.innerText = 'Cadastrar';
+                toggleMessage.innerHTML = 'Já tem uma conta? <a href="#" onclick="toggleForm()">Entrar</a>';
+            }
+        }
+
+        // Lida com Login ou Cadastro
+        async function handleForm() {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
-            try {
-                const userCredential = await auth.signInWithEmailAndPassword(email, password);
-                alert(`Bem-vindo, ${userCredential.user.email}`);
-                window.location.href = 'mapa/index.html'; // Redireciona para a página protegida
-            } catch (error) {
-                document.getElementById('error-message').innerText = `Erro: ${error.message}`;
+            if (isLogin) {
+                // Lógica de Login
+                try {
+                    const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                    alert(`Bem-vindo, ${userCredential.user.email}`);
+                    window.location.href = 'mapa/index.html'; // Redireciona para a página protegida
+                } catch (error) {
+                    document.getElementById('error-message').innerText = `Erro: ${error.message}`;
+                }
+            } else {
+                // Lógica de Cadastro
+                try {
+                    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                    alert(`Usuário criado com sucesso: ${userCredential.user.email}`);
+                    toggleForm(); // Volta para o formulário de login após cadastro
+                } catch (error) {
+                    document.getElementById('error-message').innerText = `Erro: ${error.message}`;
+                }
             }
         }
     </script>
@@ -84,16 +118,30 @@
             color: red;
             text-align: center;
         }
+        #toggle-message {
+            text-align: center;
+            margin-top: 10px;
+        }
+        #toggle-message a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        #toggle-message a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Login</h1>
+        <h1 id="form-title">Login</h1>
         <form id="loginForm">
             <input type="email" id="email" placeholder="E-mail" required />
             <input type="password" id="password" placeholder="Senha" required />
-            <button type="button" onclick="login()">Entrar</button>
+            <button type="button" id="form-button" onclick="handleForm()">Entrar</button>
         </form>
+        <p id="toggle-message">
+            Não tem uma conta? <a href="#" onclick="toggleForm()">Cadastrar</a>
+        </p>
         <p id="error-message"></p>
     </div>
 </body>
