@@ -39,7 +39,7 @@
             if (isLogin) {
                 formTitle.innerText = 'Login';
                 formButton.innerText = 'Entrar';
-                toggleMessage.innerHTML = 'Não tem uma conta?? <a href="#" onclick="toggleForm()">Cadastrar</a>';
+                toggleMessage.innerHTML = 'Não tem uma conta? <a href="#" onclick="toggleForm()">Cadastrar</a>';
             } else {
                 formTitle.innerText = 'Cadastro';
                 formButton.innerText = 'Cadastrar';
@@ -56,12 +56,20 @@
                 if (isLogin) {
                     // Lógica de Login
                     const userCredential = await auth.signInWithEmailAndPassword(email, password);
-                    alert(`Bem-vindo, ${userCredential.user.email}`);
+                    const user = userCredential.user;
+                    if (!user.emailVerified) {
+                        alert("Por favor, verifique seu e-mail antes de continuar.");
+                        auth.signOut(); // Desconecta o usuário não verificado
+                        return;
+                    }
+                    alert(`Bem-vindo, ${user.email}`);
                     window.location.href = 'mapa/index.html'; // Redireciona para a página protegida
                 } else {
-                    // Lógica de Cadastro
+                    // Lógica de Cadastro com Confirmação de E-mail
                     const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-                    alert(`Usuário criado com sucesso: ${userCredential.user.email}`);
+                    const user = userCredential.user;
+                    await user.sendEmailVerification();
+                    alert(`Usuário criado com sucesso. Um e-mail de verificação foi enviado para: ${user.email}`);
                     toggleForm(); // Volta para o formulário de login após cadastro
                 }
             } catch (error) {
@@ -71,7 +79,6 @@
                 document.getElementById('error-message').innerText = `Erro: ${errorMessage}`;
             }
         }
-
         // === INÍCIO: Função para exibir a data/hora do último push no GitHub ===
         async function fetchLastCommitDate() {
             const repo = "hamburgcap/py_2024_maps_html"; // Repositório correto
@@ -194,7 +201,7 @@
             <button type="button" id="form-button" onclick="handleForm()">Entrar</button>
         </form>
         <p id="toggle-message">
-            Não tem uma conta?? <a href="#" onclick="toggleForm()">Cadastrar</a>
+            Não tem uma conta? <a href="#" onclick="toggleForm()">Cadastrar</a>
         </p>
         <p id="error-message"></p>
         <p id="last-updated">Carregando data da última atualização...</p>
