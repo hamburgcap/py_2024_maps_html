@@ -35,15 +35,18 @@
             const formTitle = document.getElementById('form-title');
             const formButton = document.getElementById('form-button');
             const toggleMessage = document.getElementById('toggle-message');
+            const resetPasswordLink = document.getElementById('reset-password');
 
             if (isLogin) {
                 formTitle.innerText = 'Login';
                 formButton.innerText = 'Entrar';
                 toggleMessage.innerHTML = 'Não tem uma conta? <a href="#" onclick="toggleForm()">Cadastrar</a>';
+                resetPasswordLink.style.display = 'block';
             } else {
                 formTitle.innerText = 'Cadastro';
                 formButton.innerText = 'Cadastrar';
                 toggleMessage.innerHTML = 'Já tem uma conta? <a href="#" onclick="toggleForm()">Entrar</a>';
+                resetPasswordLink.style.display = 'none';
             }
         }
 
@@ -51,8 +54,10 @@
         async function handleForm() {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
+            const loadingMessage = document.getElementById('loading-message');
 
             try {
+                loadingMessage.style.display = 'block'; // Exibe indicador de carregamento
                 if (isLogin) {
                     // Lógica de Login
                     const userCredential = await auth.signInWithEmailAndPassword(email, password);
@@ -77,8 +82,27 @@
                 console.error('Mensagem de erro:', error.message);
                 const errorMessage = formatFirebaseError(error);
                 document.getElementById('error-message').innerText = `Erro: ${errorMessage}`;
+            } finally {
+                loadingMessage.style.display = 'none'; // Oculta indicador de carregamento
             }
         }
+
+        // Função para redefinir senha
+        async function resetPassword() {
+            const email = document.getElementById('email').value;
+            if (!email) {
+                alert("Por favor, insira seu e-mail para redefinir a senha.");
+                return;
+            }
+            try {
+                await auth.sendPasswordResetEmail(email);
+                alert(`Um link para redefinição de senha foi enviado para: ${email}`);
+            } catch (error) {
+                console.error('Erro ao enviar link de redefinição de senha:', error);
+                alert("Erro ao enviar o link de redefinição. Verifique o e-mail e tente novamente.");
+            }
+        }
+
         // === INÍCIO: Função para exibir a data/hora do último push no GitHub ===
         async function fetchLastCommitDate() {
             const repo = "hamburgcap/py_2024_maps_html"; // Repositório correto
@@ -190,6 +214,18 @@
         #toggle-message a:hover {
             text-decoration: underline;
         }
+        #last-updated {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #555;
+        }
+        #loading-message {
+            text-align: center;
+            color: #555;
+            margin-top: 10px;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -204,7 +240,11 @@
             Não tem uma conta? <a href="#" onclick="toggleForm()">Cadastrar</a>
         </p>
         <p id="error-message"></p>
+        <p id="loading-message">Carregando...</p>
         <p id="last-updated">Carregando data da última atualização...</p>
+        <p id="reset-password" style="text-align: center; margin-top: 10px;">
+            <a href="#" onclick="resetPassword()">Esqueceu sua senha?</a>
+        </p>
     </div>
 </body>
 </html>
