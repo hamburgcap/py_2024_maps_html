@@ -52,24 +52,41 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
-            if (isLogin) {
-                // Lógica de Login
-                try {
+            try {
+                if (isLogin) {
+                    // Lógica de Login
                     const userCredential = await auth.signInWithEmailAndPassword(email, password);
                     alert(`Bem-vindo, ${userCredential.user.email}`);
                     window.location.href = 'mapa/index.html'; // Redireciona para a página protegida
-                } catch (error) {
-                    document.getElementById('error-message').innerText = `Erro: ${error.message}`;
-                }
-            } else {
-                // Lógica de Cadastro
-                try {
+                } else {
+                    // Lógica de Cadastro
                     const userCredential = await auth.createUserWithEmailAndPassword(email, password);
                     alert(`Usuário criado com sucesso: ${userCredential.user.email}`);
                     toggleForm(); // Volta para o formulário de login após cadastro
-                } catch (error) {
-                    document.getElementById('error-message').innerText = `Erro: ${error.message}`;
                 }
+            } catch (error) {
+                const errorMessage = formatFirebaseError(error);
+                document.getElementById('error-message').innerText = `Erro: ${errorMessage}`;
+            }
+        }
+
+        // Formata os erros retornados pelo Firebase
+        function formatFirebaseError(error) {
+            switch (error.code) {
+                case 'auth/invalid-email':
+                    return 'O endereço de e-mail não é válido.';
+                case 'auth/user-disabled':
+                    return 'Esta conta de usuário foi desativada.';
+                case 'auth/user-not-found':
+                    return 'Usuário não encontrado. Verifique o e-mail e tente novamente.';
+                case 'auth/wrong-password':
+                    return 'Senha incorreta. Tente novamente.';
+                case 'auth/email-already-in-use':
+                    return 'O e-mail já está em uso por outra conta.';
+                case 'auth/weak-password':
+                    return 'A senha é muito fraca. Use uma senha mais forte.';
+                default:
+                    return 'Ocorreu um erro inesperado. Tente novamente.';
             }
         }
     </script>
