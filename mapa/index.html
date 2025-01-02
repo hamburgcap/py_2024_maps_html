@@ -254,9 +254,19 @@
 
     <script>
     // Função debounce para limitar as chamadas frequentes
-      // moved to maps.js
+    function debounce(func, delay) {
+        let timeout;
+        return function(...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
     // Função para alternar a exibição do painel de filtros
-      // moved to maps.js
+    function toggleFilterPanel() {
+        const filterPanel = document.getElementById('filter-panel');
+        filterPanel.classList.toggle('hidden');
+    }
+
     // Cria o mapa
     var map = L.map('map').setView([-23.55052, -46.633308], 5);
 
