@@ -1,4 +1,4 @@
-// map.js
+// Arquivo: map.js
 
 // Função debounce para limitar chamadas frequentes
 function debounce(func, delay) {
@@ -40,7 +40,7 @@ $(function () {
             $("#price-min").text(ui.values[0]);
             $("#price-max").text(ui.values[1]);
             atualizarMarcadores();
-        }, 200) // Atualiza após 200ms de inatividade
+        }, 200)
     });
 
     $("#price-min").text($("#price-slider").slider("values", 0));
@@ -74,32 +74,16 @@ fetch('locations.json?version=' + new Date().getTime())
             modalidades.add(location.modalidade_de_venda);
             tipos.add(location.tipo);
 
-            // Escolhe o ícone com base no tipo de imóvel
-            let iconHtml;
-            if (['Casa', 'Apartamento', 'Sobrado', 'Prédio'].includes(location.tipo)) {
-                iconHtml = '<i class="fas fa-home" style="font-size: 30px; color: #0000FF;"></i>';
-            } else if (['Loja', 'Comercial', 'Sala', 'Galpão'].includes(location.tipo)) {
-                iconHtml = '<i class="fas fa-store" style="font-size: 30px; color: #0000FF;"></i>';
-            } else if (['Terreno', 'Gleba', 'Gleba Urbana', 'Imóvel Rural'].includes(location.tipo)) {
-                iconHtml = '<i class="fas fa-tractor" style="font-size: 30px; color: #0000FF;"></i>';
-            } else {
-                iconHtml = '<i class="fas fa-map-marker-alt" style="font-size: 30px; color: #0000FF;"></i>';
-            }
-
-            // Adiciona indicador de desconto, se aplicável
-            let discountHtml = '';
-            if (location.desconto >= 30) {
-                discountHtml = `<div class="discount-label">${Math.round(location.desconto)}%</div>`;
-            }
-
+            // Define ícones e rótulos para os marcadores
+            const iconHtml = definirIcone(location.tipo, location.desconto);
             const customIcon = L.divIcon({
                 className: 'custom-icon',
-                html: iconHtml + discountHtml,
+                html: iconHtml,
                 iconSize: [30, 30],
                 iconAnchor: [15, 30]
             });
 
-            // Cria um marcador
+            // Cria o marcador
             const marker = L.marker([location.lat, location.lng], { icon: customIcon })
                 .bindPopup(
                     `<b>Preço: R$${location.preco}</b><br>` +
@@ -109,7 +93,7 @@ fetch('locations.json?version=' + new Date().getTime())
                     `<a href="${location.link_de_acesso}" target="_blank">Acessar o Imóvel</a>`
                 );
 
-            // Salva o marcador junto com os filtros
+            // Armazena o marcador e seus atributos
             allMarkers.push({
                 marker,
                 modalidade: location.modalidade_de_venda,
@@ -118,60 +102,76 @@ fetch('locations.json?version=' + new Date().getTime())
                 desconto: location.desconto !== null ? location.desconto : -1
             });
 
-            // Adiciona o marcador ao cluster
+            // Adiciona ao cluster
             markers.addLayer(marker);
         });
 
-        // Adiciona os clusters ao mapa
+        // Adiciona o cluster ao mapa
         map.addLayer(markers);
 
-        // Preenche os checkboxes de filtros
+        // Preenche filtros dinâmicos
         preencherFiltros(modalidades, tipos);
     })
     .catch(error => console.error('Erro ao carregar o JSON:', error));
 
-// Preenche os filtros dinâmicos
+// Define ícones e rótulos de descontos para os marcadores
+function definirIcone(tipo, desconto) {
+    let iconHtml;
+    if (['Casa', 'Apartamento', 'Sobrado', 'Prédio'].includes(tipo)) {
+        iconHtml = '<i class="fas fa-home" style="font-size: 30px; color: #0000FF;"></i>';
+    } else if (['Loja', 'Comercial', 'Sala', 'Galpão'].includes(tipo)) {
+        iconHtml = '<i class="fas fa-store" style="font-size: 30px; color: #0000FF;"></i>';
+    } else if (['Terreno', 'Gleba', 'Gleba Urbana', 'Imóvel Rural'].includes(tipo)) {
+        iconHtml = '<i class="fas fa-tractor" style="font-size: 30px; color: #0000FF;"></i>';
+    } else {
+        iconHtml = '<i class="fas fa-map-marker-alt" style="font-size: 30px; color: #0000FF;"></i>';
+    }
+
+    if (desconto >= 30) {
+        iconHtml += `<div class="discount-label">${Math.round(desconto)}%</div>`;
+    }
+
+    return iconHtml;
+}
+
+// Preenche filtros dinâmicos
 function preencherFiltros(modalidades, tipos) {
     const filterModalidadeDiv = document.getElementById('filter-modalidade');
     modalidades.forEach(modalidade => {
         const container = document.createElement('div');
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.value = modalidade;
-        checkbox.checked = true;
-        checkbox.id = 'modalidade-' + modalidade;
-        checkbox.addEventListener('change', atualizarMarcadores);
-
-        const label = document.createElement('label');
-        label.htmlFor = 'modalidade-' + modalidade;
-        label.textContent = modalidade;
-
-        container.appendChild(checkbox);
-        container.appendChild(label);
+        const checkbox = criarCheckbox('modalidade', modalidade);
+        container.appendChild(checkbox.checkbox);
+        container.appendChild(checkbox.label);
         filterModalidadeDiv.appendChild(container);
     });
 
     const filterTipoDiv = document.getElementById('filter-tipo');
     tipos.forEach(tipo => {
         const container = document.createElement('div');
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.value = tipo;
-        checkbox.checked = true;
-        checkbox.id = 'tipo-' + tipo;
-        checkbox.addEventListener('change', atualizarMarcadores);
-
-        const label = document.createElement('label');
-        label.htmlFor = 'tipo-' + tipo;
-        label.textContent = tipo;
-
-        container.appendChild(checkbox);
-        container.appendChild(label);
+        const checkbox = criarCheckbox('tipo', tipo);
+        container.appendChild(checkbox.checkbox);
+        container.appendChild(checkbox.label);
         filterTipoDiv.appendChild(container);
     });
 }
 
-// Atualiza os marcadores no mapa com base nos filtros
+// Cria elementos de checkbox para os filtros
+function criarCheckbox(categoria, valor) {
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.value = valor;
+    checkbox.checked = true;
+    checkbox.id = `${categoria}-${valor}`;
+    checkbox.addEventListener('change', atualizarMarcadores);
+
+    const label = document.createElement('label');
+    label.htmlFor = `${categoria}-${valor}`;
+    label.textContent = valor;
+
+    return { checkbox, label };
+}
+
+// Atualiza os marcadores com base nos filtros
 function atualizarMarcadores() {
     const modalidadesSelecionadas = Array.from(document.querySelectorAll('#filter-modalidade input:checked')).map(checkbox => checkbox.value);
     const tiposSelecionados = Array.from(document.querySelectorAll('#filter-tipo input:checked')).map(checkbox => checkbox.value);
@@ -182,7 +182,6 @@ function atualizarMarcadores() {
 
     markers.clearLayers(); // Remove marcadores antigos
 
-    // Adiciona os marcadores filtrados
     allMarkers.forEach(item => {
         if (
             modalidadesSelecionadas.includes(item.modalidade) &&
