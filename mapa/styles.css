@@ -4,6 +4,7 @@ body {
     margin: 0;
     font-family: 'Roboto', Arial, sans-serif;
     background-color: #f5f5f5;
+    overflow: hidden; /* Evita barras de rolagem desnecessárias */
 }
 
 #top-bar {
@@ -40,9 +41,11 @@ body {
 }
 
 #map {
-    width: 100%;
-    height: calc(100vh - 60px);
-    float: right;
+    width: calc(100vw - 350px); /* Considerando a largura do painel de filtros */
+    height: calc(100vh - 60px); /* Considerando a altura do cabeçalho */
+    position: absolute;
+    top: 60px;
+    left: 350px;
 }
 
 #filter-panel {
@@ -57,6 +60,7 @@ body {
     top: 60px;
     z-index: 1000;
     transition: transform 0.3s ease;
+    max-height: calc(100vh - 60px);
 }
 
 #filter-panel.hidden {
