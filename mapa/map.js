@@ -15,8 +15,16 @@ function toggleFilterPanel() {
     filterPanel.classList.toggle('hidden');
 }
 
-// Inicializa o mapa
-const map = L.map('map').setView([-23.55052, -46.633308], 5);
+// Inicializa o mapa com os controles de zoom no lado direito
+const map = L.map('map', {
+    zoomControl: false // Desativa o controle padrão de zoom
+}).setView([-23.55052, -46.633308], 5);
+
+// Adiciona os controles de zoom no lado direito
+L.control.zoom({
+    position: 'topright' // Define a posição como canto superior direito
+}).addTo(map);
+
 
 // Adiciona o tile layer do OpenStreetMap
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
