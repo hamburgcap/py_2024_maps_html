@@ -41,11 +41,12 @@ body {
 }
 
 #map {
-    width: calc(100vw - 350px); /* Considerando a largura do painel de filtros */
-    height: calc(100vh - 60px); /* Considerando a altura do cabeçalho */
+    width: 100%; /* Agora ocupa toda a largura disponível */
+    height: calc(100vh - 60px);
     position: absolute;
     top: 60px;
-    left: 350px;
+    left: 0;
+    z-index: 500; /* Certifica-se de que o mapa fique atrás do painel */
 }
 
 #filter-panel {
@@ -55,16 +56,15 @@ body {
     padding: 20px;
     box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
     overflow-y: auto;
-    position: fixed;
+    position: absolute; /* Alterado de fixed para absolute */
     left: 0;
     top: 60px;
     z-index: 1000;
     transition: transform 0.3s ease;
-    max-height: calc(100vh - 60px);
 }
 
 #filter-panel.hidden {
-    transform: translateX(-100%);
+    transform: translateX(-350px); /* Move o painel completamente para fora da tela */
 }
 
 #filter-panel h3 {
