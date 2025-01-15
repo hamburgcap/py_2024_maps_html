@@ -25,25 +25,12 @@ L.control.zoom({
     position: 'topright' // Define a posição como canto superior direito
 }).addTo(map);
 
+
 // Adiciona o tile layer do OpenStreetMap
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '© OpenStreetMap contributors'
 }).addTo(map);
-
-// Adiciona a funcionalidade de busca
-const searchControl = new L.Control.Search({
-    url: 'https://nominatim.openstreetmap.org/search?format=json&q={s}', // API de busca Nominatim
-    jsonpParam: 'json_callback', // Para lidar com a resposta JSONP
-    propertyName: 'display_name', // Campo exibido nos resultados
-    propertyLoc: ['lat', 'lon'], // Latitude e longitude nos resultados
-    autoCollapse: true, // Fecha automaticamente após seleção
-    autoType: false, // Não tenta preencher automaticamente
-    minLength: 2 // Mínimo de caracteres para iniciar a busca
-});
-
-// Adiciona o controle de busca ao mapa
-map.addControl(searchControl);
 
 // Cria o grupo de clusters
 const markers = L.markerClusterGroup();
@@ -190,4 +177,29 @@ function criarCheckbox(categoria, valor) {
     label.textContent = valor;
 
     return { checkbox, label };
+}
+
+// Atualiza os marcadores com base nos filtros
+function atualizarMarcadores() {
+    const modalidadesSelecionadas = Array.from(document.querySelectorAll('#filter-modalidade input:checked')).map(checkbox => checkbox.value);
+    const tiposSelecionados = Array.from(document.querySelectorAll('#filter-tipo input:checked')).map(checkbox => checkbox.value);
+    const precoMin = $("#price-slider").slider("values", 0);
+    const precoMax = $("#price-slider").slider("values", 1);
+    const descontoMin = $("#discount-slider").slider("values", 0);
+    const descontoMax = $("#discount-slider").slider("values", 1);
+
+    markers.clearLayers(); // Remove marcadores antigos
+
+    allMarkers.forEach(item => {
+        if (
+            modalidadesSelecionadas.includes(item.modalidade) &&
+            tiposSelecionados.includes(item.tipo) &&
+            item.preco >= precoMin &&
+            item.preco <= precoMax &&
+            item.desconto >= descontoMin &&
+            item.desconto <= descontoMax
+        ) {
+            markers.addLayer(item.marker);
+        }
+    });
 }
