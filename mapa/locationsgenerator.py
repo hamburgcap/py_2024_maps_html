@@ -6,6 +6,8 @@ from tkinter import filedialog
 import time
 import random
 import os
+import threading
+import keyboard  # Biblioteca para capturar eventos de teclado
 
 def load_user_agents_from_csv():
     """Carrega a lista de User-Agents de um arquivo CSV na mesma pasta do script."""
@@ -46,46 +48,76 @@ def clean_address(address, filters):
     cleaned = ','.join(address.split(',')[:4])
     return cleaned.replace("Brasil,", "").strip().strip(',')
 
+def remove_last_segment(address):
+    """Remove o último segmento do endereço baseado em vírgulas."""
+    if ',' in address:  # Tenta remover segmentos separados por vírgula
+        parts = address.rsplit(',', 1)
+        return parts[0].strip() if len(parts) > 1 else address.strip()
+    return address.strip()  # Se não houver nada para remover, retorna o endereço original
+
 def get_geolocation(address, user_agents):
-    """Obtém a geolocalização para um endereço usando a API Nominatim."""
+    """Obtém a geolocalização para um endereço usando a API Nominatim, com redução do endereço em caso de falha."""
     base_url = "https://nominatim.openstreetmap.org/search"
     params = {
-        'q': address,
         'format': 'json',
         'addressdetails': 0,
         'limit': 2  # Retorna até 2 resultados para maior precisão
     }
     retry_interval = 5 * 60  # 5 minutos inicial
     max_retries = 5  # Número máximo de tentativas
+    max_reductions = 20  # Limite máximo de reduções do endereço
+    wait_between_reductions = 20  # Espera de 10 segundos entre reduções do endereço
 
-    for attempt in range(max_retries):
-        headers = {
-            'User-Agent': random.choice(user_agents)
-        }
-        current_ip = get_public_ip()
-        print(f"\nTentativa {attempt + 1}/{max_retries}")
-        print(f"- User-Agent: {headers['User-Agent']}")
-        print(f"- IP utilizado: {current_ip}")
-        try:
-            response = requests.get(base_url, params=params, headers=headers, timeout=15)
-            print(f"URL chamada: {response.url}")
-            if response.status_code == 200:
-                data = response.json()
-                print(f"Resposta do servidor: {data}")
-                if data:
-                    lat = float(data[0]['lat'])
-                    lon = float(data[0]['lon'])
-                    return lat, lon
+    reductions = 0
+    while address and reductions <= max_reductions:
+        for attempt in range(max_retries):
+            headers = {'User-Agent': random.choice(user_agents)}
+            current_ip = get_public_ip()
+            print(f"\nTentativa {attempt + 1}/{max_retries} para o endereço: {address}")
+            print(f"- User-Agent: {headers['User-Agent']}")
+            print(f"- IP utilizado: {current_ip}")
+
+            try:
+                params['q'] = address
+                response = requests.get(base_url, params=params, headers=headers, timeout=15)
+                print(f"URL chamada: {response.url}")
+                if response.status_code == 200:
+                    data = response.json()
+                    print(f"Resposta do servidor: {data}")
+                    if data:
+                        lat = float(data[0]['lat'])
+                        lon = float(data[0]['lon'])
+                        return lat, lon
+                    else:
+                        print(f"Resposta vazia para o endereço: {address}")
+                        break  # Tentar reduzir o endereço
+                elif response.status_code == 403:
+                    print(f"Erro HTTP 403 para o endereço: {address}. Mudando User-Agent e aguardando {retry_interval // 60} minutos...")
+                    time.sleep(retry_interval)
+                    retry_interval *= 2
                 else:
-                    print(f"Resposta vazia para o endereço: {address}")
-                    return 0.00, 0.00
-            else:
-                print(f"Erro HTTP {response.status_code} para o endereço: {address}")
-        except requests.exceptions.RequestException as e:
-            print(f"Erro na requisição: {e}. Aguardando {retry_interval // 60} minutos antes de tentar novamente...")
-            time.sleep(retry_interval)
-            retry_interval *= 2
-    return None, None
+                    print(f"Erro HTTP {response.status_code} para o endereço: {address}")
+            except requests.exceptions.RequestException as e:
+                print(f"Erro na requisição: {e}. Aguardando {retry_interval // 60} minutos antes de tentar novamente...")
+                time.sleep(retry_interval)
+                retry_interval *= 2
+
+        # Reduzir o endereço removendo o último segmento
+        print(f"Reduzindo o endereço: {address}")  # Adicionado log de redução
+        address = remove_last_segment(address)
+        reductions += 1
+        print(f"Endereço reduzido ({reductions}/{max_reductions}): {address}")
+
+        if ',' not in address:  # Parar se restar apenas um segmento
+            print("Endereço chegou a um único segmento. Parando a redução.")
+            break
+
+        print(f"Tentando novamente com endereço reduzido: {address}")
+        time.sleep(wait_between_reductions)  # Espera entre reduções do endereço
+
+    # Se todas as tentativas falharem, retornar 0.00, 0.00
+    print(f"Falha ao obter coordenadas para o endereço: {address}. Definindo lat=0.00 e lng=0.00")
+    return 0.00, 0.00
 
 def open_file_dialog(title, filetypes):
     """Abre um seletor de arquivos para escolher o arquivo desejado."""
@@ -121,6 +153,19 @@ def load_existing_locations():
             print("Erro ao decodificar o arquivo locations.json. O arquivo pode estar corrompido.")
     return []
 
+def save_progress(locations):
+    """Salva o progresso atual no arquivo locations.json."""
+    with open('locations.json', 'w', encoding='utf-8') as f:
+        json.dump(locations, f, ensure_ascii=False, indent=4)
+    print("Progresso salvo no arquivo locations.json")
+
+def monitor_save_request(locations):
+    """Monitor para salvar o progresso quando a tecla 'S' for pressionada."""
+    while True:
+        if keyboard.is_pressed('s'):
+            save_progress(locations)
+            time.sleep(1)  # Evita múltiplas salvagens consecutivas
+
 def main():
     start_time = time.time()  # Início do timer
 
@@ -154,15 +199,16 @@ def main():
     wait_time = 15  # Tempo médio de espera entre requisições (em segundos)
     completed = 0
 
+    # Iniciar o monitor de salvamento em uma thread separada
+    threading.Thread(target=monitor_save_request, args=(locations,), daemon=True).start()
+
     # Identificar endereços existentes
     print("\nEndereços existentes no JSON e RDA que serão pulados:")
-    for _, row in df.iterrows():
-        key = str(row['n_do_imovel'])
-        if key in existing_keys:
-            print(f"- n_do_imovel: {key}")
+    skipped_count = sum(1 for _, row in df.iterrows() if str(row['n_do_imovel']) in existing_keys)
+    print(f"Total de endereços a serem pulados: {skipped_count}")
 
     # Processamento dos endereços
-    filters = ['PR,', 'Curitiba']  # Filtros personalizados para endereços
+    filters = ['']  # Filtros personalizados para endereços
     for idx, (_, row) in enumerate(df.iterrows(), start=1):
         key = str(row['n_do_imovel'])
         address = clean_address(row['google_query'], filters)
@@ -200,8 +246,7 @@ def main():
     df_keys = set(df['n_do_imovel'].astype(str))
     locations = [loc for loc in locations if str(loc.get('n_do_imovel', 'NULL')) in df_keys]
 
-    with open('locations.json', 'w', encoding='utf-8') as f:
-        json.dump(locations, f, ensure_ascii=False, indent=4)
+    save_progress(locations)
     print(f"\nNúmero de itens no novo arquivo locations.json: {len(locations)}")
     print(f"\nExecução concluída: {format_elapsed_time(time.time() - start_time)}")
     print(f"\nNúmero de itens no df.Rda: {len(df)}")
