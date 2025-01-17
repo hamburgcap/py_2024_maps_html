@@ -11,6 +11,25 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script>
+        // Configuração do Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAwVI2G9I_2ThVcHPCFiqVQfYNYZvfPgvg",
+            authDomain: "rotadosleiloes.firebaseapp.com",
+            projectId: "rotadosleiloes",
+            storageBucket: "rotadosleiloes.firebasestorage.app",
+            messagingSenderId: "1022316924185",
+            appId: "1:1022316924185:web:72194a4fe18508c104c988",
+            measurementId: "G-D5NQPEWTZQ"
+        };
+
+        // Inicializa o Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        // Inicializa o serviço de autenticação
+        const auth = firebase.auth();
+
+        // Exporta o objeto `auth` para ser usado em outros arquivos
+        export { auth };
         // Controle do modo atual (login ou cadastro)
         let isLogin = true;
 
