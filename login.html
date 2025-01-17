@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="firebase_login.js"></script>
+    <script src="firebase.js"></script>
     <link rel="stylesheet" href="styles_login.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,9 +10,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script>
-
-    // Função de inicialização do Firebase
-    function initializeFirebase() {
         // Configuração do Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyAwVI2G9I_2ThVcHPCFiqVQfYNYZvfPgvg",
@@ -26,9 +23,10 @@
 
         // Inicializa o Firebase
         firebase.initializeApp(firebaseConfig);
+
+        // Inicializa o serviço de autenticação
         const auth = firebase.auth();
 
-    }
         // Controle do modo atual (login ou cadastro)
         let isLogin = true;
 
