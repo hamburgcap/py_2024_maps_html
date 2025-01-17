@@ -1,261 +1,69 @@
-/* Enhanced Background and Container Styles */
+/* Arquivo: styles.css */
 
-/* General body styling, including font and background setup */
 body {
-    font-family: Arial, sans-serif; /* Sets the font for the page */
-    background: linear-gradient(135deg, #74b9ff, #a29bfe); /* Gradient background */
-    background-size: cover; /* Ensures the background fully covers the viewport */
-    display: flex; /* Enables flexbox layout for centering */
-    justify-content: center; /* Centers content horizontally */
-    align-items: center; /* Centers content vertically */
-    height: 100vh; /* Full viewport height */
-    margin: 0; /* Removes default body margin */
-    color: #333; /* Default text color */
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
 }
-
-/* Dark mode styles */
-body.dark-mode {
-    background: linear-gradient(135deg, #2c3e50, #34495e); /* Dark gradient background */
-    color: #ecf0f1; /* Light text color */
-}
-
-/* Ensures padding and borders are included in width and height */
-* {
-    box-sizing: border-box;
-}
-
-/* Styles the container that holds the form */
 .container {
-    background: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
-    padding: 30px 25px; /* Adds inner padding for better spacing */
-    border-radius: 12px; /* Rounds the container's corners */
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); /* Adds a subtle shadow for depth */
-    width: 100%; /* Ensures responsiveness */
-    max-width: 400px; /* Limits the width to 400px on larger screens */
-    text-align: center; /* Centers the text inside */
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
 }
-
-/* Dark mode container styles */
-body.dark-mode .container {
-    background: rgba(44, 62, 80, 0.9); /* Semi-transparent dark background */
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5); /* Darker shadow */
-}
-
-/* Logo styling */
-.logo {
-    width: 120px; /* Set a fixed width for the logo */
-    margin: 0 auto 20px auto; /* Center the logo and add spacing below */
-    display: block; /* Ensure it's treated as a block element */
-}
-
-/* Styles for the main heading */
 h1 {
-    font-size: 1.8em; /* Sets the heading font size */
-    color: #2d3436; /* Dark gray color for contrast */
-    margin-bottom: 20px; /* Adds spacing below the heading */
+    text-align: center;
+    color: #333;
 }
-
-/* Dark mode heading styles */
-body.dark-mode h1 {
-    color: #ecf0f1; /* Light color for headings */
-}
-
-/* General styles for input fields */
 input {
-    width: 100%; /* Input fields take full width */
-    padding: 12px; /* Inner spacing inside the input fields */
-    margin: 10px 0; /* Adds spacing above and below the input fields */
-    border: 1px solid #dfe6e9; /* Light gray border */
-    border-radius: 6px; /* Rounds the input field's corners */
-    font-size: 1em; /* Sets the input font size */
-    transition: box-shadow 0.3s ease, background-color 0.3s ease; /* Adds smooth glow effect */
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
-
-/* Input field glow effect on focus */
-input:focus {
-    box-shadow: 0 0 8px rgba(9, 132, 227, 0.8); /* Blue glow */
-    outline: none; /* Removes default outline */
-}
-
-/* Dark mode input styles */
-body.dark-mode input {
-    background-color: #2c3e50; /* Dark background for inputs */
-    color: #ecf0f1; /* Light text color */
-    border: 1px solid #34495e; /* Dark border color */
-}
-
-body.dark-mode input:focus {
-    box-shadow: 0 0 8px rgba(236, 240, 241, 0.8); /* Light glow on focus */
-}
-
-/* General button styles */
 button {
-    width: 100%; /* Button takes full width */
-    padding: 12px; /* Inner spacing inside the button */
-    background-color: #0984e3; /* Primary blue color */
-    color: white; /* White text color for contrast */
-    font-size: 1em; /* Sets the button font size */
-    border: none; /* Removes border */
-    border-radius: 6px; /* Rounds the button's corners */
-    cursor: pointer; /* Changes cursor to pointer on hover */
-    position: relative; /* For ripple effect */
-    overflow: hidden; /* Ensures ripple effect stays inside button */
-    transition: background-color 0.3s ease; /* Smooth color transition on hover */
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 }
-
-/* Dark mode button styles */
-body.dark-mode button {
-    background-color: #34495e; /* Dark background for buttons */
-    color: #ecf0f1; /* Light text color */
-}
-
-body.dark-mode button:hover {
-    background-color: #2c3e50; /* Slightly darker hover color */
-}
-
-/* Hover effect for buttons */
 button:hover {
-    background-color: #74b9ff; /* Lighter blue on hover */
+    background-color: #0056b3;
 }
-
-/* Ripple effect on button click */
-button:active::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100px;
-    height: 100px;
-    background: rgba(255, 255, 255, 0.5); /* Ripple color */
-    border-radius: 50%;
-    transform: translate(-50%, -50%) scale(0); /* Start small */
-    animation: ripple 0.6s ease-out; /* Animate ripple effect */
-}
-
-/* Ripple effect keyframes */
-@keyframes ripple {
-    to {
-        transform: translate(-50%, -50%) scale(4); /* Expand ripple */
-        opacity: 0; /* Fade out */
-    }
-}
-
-/* Styles for error messages */
 #error-message {
-    color: red; /* Red color to highlight errors */
-    font-size: 0.9em; /* Slightly smaller font size */
-    margin-top: 10px; /* Adds spacing above the error message */
+    color: red;
+    text-align: center;
 }
-
-/* Styles for the last updated text */
+#toggle-message {
+    text-align: center;
+    margin-top: 10px;
+}
+#toggle-message a {
+    color: #007bff;
+    text-decoration: none;
+}
+#toggle-message a:hover {
+    text-decoration: underline;
+}
 #last-updated {
-    font-size: 0.85em; /* Smaller font size for subtlety */
-    color: #636e72; /* Neutral gray color */
-    margin-top: 15px; /* Adds spacing above the last updated text */
+    text-align: center;
+    margin-top: 10px;
+    font-size: 0.9em;
+    color: #555;
 }
-
-body.dark-mode #last-updated {
-    color: #ecf0f1; /* Light text for last updated */
-}
-
-/* Toast notification styling */
-.toast {
-    position: fixed; /* Fixed position at the top */
-    top: 10px; /* Position below the top edge */
-    left: 50%; /* Center horizontally */
-    transform: translateX(-50%); /* Center alignment fix */
-    background: #0984e3; /* Blue background for notifications */
-    color: white; /* White text for contrast */
-    padding: 10px 20px; /* Spacing inside the toast */
-    border-radius: 6px; /* Rounded corners */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow */
-    z-index: 1000; /* Ensure it's above other elements */
-    display: none; /* Hidden by default */
-}
-
-body.dark-mode .toast {
-    background: #34495e; /* Dark background for toast */
-    color: #ecf0f1; /* Light text color */
-}
-
-/* Styles for Input Groups with Icons and Floating Labels */
-
-/* Wrapper for input fields and their icons */
-.input-group {
-    position: relative; /* Allows absolute positioning inside */
-    margin: 15px 0; /* Adds spacing above and below each group */
-}
-
-/* Styles for the icons inside input groups */
-.input-group .icon {
-    position: absolute; /* Positions icon relative to the input group */
-    left: 15px; /* Positions icon 15px from the left */
-    top: 50%; /* Positions icon in the middle vertically */
-    transform: translateY(-50%); /* Ensures perfect vertical alignment */
-    color: #b2bec3; /* Light gray color for the icon */
-    font-size: 1em; /* Adjusts size to fit input height */
-}
-
-body.dark-mode .input-group .icon {
-    color: #ecf0f1; /* Light color for icons in dark mode */
-}
-
-/* Styles for input fields inside input groups */
-.input-group input {
-    width: calc(100% - 15px); /* Ensures the input stays within the container while accounting for padding and icons */
-    padding: 12px 12px 12px 45px; /* Adds padding to accommodate the icon */
-    margin: 0; /* Removes default margin */
-    border: 1px solid #dfe6e9; /* Light gray border */
-    border-radius: 6px; /* Rounds the input field's corners */
-    font-size: 1em; /* Sets the input font size */
-    background: transparent; /* Transparent background */
-}
-
-/* Focus styles for input fields */
-.input-group input:focus {
-    border-color: #0984e3; /* Changes border color to blue on focus */
-    outline: none; /* Removes default outline */
-}
-
-/* Styles for labels inside input groups */
-.input-group label {
-    position: absolute; /* Positions label relative to the input group */
-    left: 45px; /* Aligns the label with the input text */
-    top: 16px; /* Positions the label slightly above the input field */
-    font-size: 1em; /* Sets the label font size */
-    color: #b2bec3; /* Light gray color for the label */
-    transition: 0.3s ease; /* Smooth transition for label movement */
-    pointer-events: none; /* Disables pointer events on the label */
-}
-
-body.dark-mode .input-group label {
-    color: #ecf0f1; /* Light color for labels in dark mode */
-}
-
-/* Styles for labels when input is focused or filled */
-.input-group input:focus + label,
-.input-group input:not(:placeholder-shown) + label {
-    top: -15px; /* Moves the label above the input field */
-    font-size: 0.85em; /* Reduces label font size */
-    color: #0984e3; /* Changes label color to blue */
-}
-
-body.dark-mode .input-group input:focus + label,
-body.dark-mode .input-group input:not(:placeholder-shown) + label {
-    color: #ecf0f1; /* Light color for focused labels in dark mode */
-}
-
-/* Responsive adjustments for mobile devices */
-@media (max-width: 480px) {
-    .container {
-        padding: 20px 15px; /* Reduce padding on smaller screens */
-    }
-
-    h1 {
-        font-size: 1.5em; /* Reduce heading size for mobile */
-    }
-
-    button {
-        padding: 10px; /* Adjust button padding */
-    }
+#loading-message {
+    text-align: center;
+    color: #555;
+    margin-top: 10px;
+    display: none;
 }

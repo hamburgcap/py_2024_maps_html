@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="firebase.js"></script>
     <link rel="stylesheet" href="styles_login.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +9,6 @@
     <!-- Scripts do Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script>
         // Configuração do Firebase
         const firebaseConfig = {
@@ -27,8 +27,6 @@
         // Inicializa o serviço de autenticação
         const auth = firebase.auth();
 
-        // Exporta o objeto `auth` para ser usado em outros arquivos
-        export { auth };
         // Controle do modo atual (login ou cadastro)
         let isLogin = true;
 
@@ -162,21 +160,82 @@
             }
         }
     </script>
-    </head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #error-message {
+            color: red;
+            text-align: center;
+        }
+        #toggle-message {
+            text-align: center;
+            margin-top: 10px;
+        }
+        #toggle-message a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        #toggle-message a:hover {
+            text-decoration: underline;
+        }
+        #last-updated {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #555;
+        }
+        #loading-message {
+            text-align: center;
+            color: #555;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
 <body>
     <div class="container">
         <h1 id="form-title">Login</h1>
         <form id="loginForm">
-            <div class="input-group">
-                <i class="fa fa-envelope icon"></i>
-                <input type="email" id="email" placeholder=" " required />
-                <label for="email">E-mail</label>
-            </div>
-            <div class="input-group">
-                <i class="fa fa-lock icon"></i>
-                <input type="password" id="password" placeholder=" " required />
-                <label for="password">Senha</label>
-            </div>
+            <input type="email" id="email" placeholder="E-mail" required />
+            <input type="password" id="password" placeholder="Senha" required />
             <button type="button" id="form-button" onclick="handleForm()">Entrar</button>
         </form>
         <p id="toggle-message">
