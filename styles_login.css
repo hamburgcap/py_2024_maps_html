@@ -1,5 +1,3 @@
-/* Arquivo: styles.css */
-
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
@@ -94,19 +92,12 @@ h1 {
 }
 
 #error-message {
-    display: none; /* Oculta o erro por padrão */
-    background-color: #f8d7da;
     color: #721c24;
     padding: 10px;
-    border: 1px solid #f5c6cb;
-    border-radius: 6px;
+    border: none;
     margin: 10px 0;
     font-size: 14px;
     text-align: left;
-}
-
-#error-message.visible {
-    display: block; /* Torna visível quando necessário */
 }
 
 #last-updated {
