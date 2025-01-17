@@ -9,6 +9,7 @@
     <!-- Scripts do Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script>
         // Configuração do Firebase
         const firebaseConfig = {
@@ -165,8 +166,16 @@
     <div class="container">
         <h1 id="form-title">Login</h1>
         <form id="loginForm">
-            <input type="email" id="email" placeholder="E-mail" required />
-            <input type="password" id="password" placeholder="Senha" required />
+            <div class="input-group">
+                <i class="fa fa-envelope icon"></i>
+                <input type="email" id="email" placeholder=" " required />
+                <label for="email">E-mail</label>
+            </div>
+            <div class="input-group">
+                <i class="fa fa-lock icon"></i>
+                <input type="password" id="password" placeholder=" " required />
+                <label for="password">Senha</label>
+            </div>
             <button type="button" id="form-button" onclick="handleForm()">Entrar</button>
         </form>
         <p id="toggle-message">

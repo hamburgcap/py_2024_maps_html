@@ -64,3 +64,49 @@ button:hover {
     color: #636e72;
     margin-top: 15px;
 }
+
+/* Styles for Input Groups with Icons and Floating Labels */
+.input-group {
+    position: relative;
+    margin: 15px 0;
+}
+
+.input-group .icon {
+    position: absolute;
+    left: 10px;
+    top: 12px;
+    color: #b2bec3;
+    font-size: 1.2em;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 12px 12px 40px;
+    margin: 0;
+    border: 1px solid #dfe6e9;
+    border-radius: 6px;
+    font-size: 1em;
+    background: transparent;
+}
+
+.input-group input:focus {
+    border-color: #0984e3;
+    outline: none;
+}
+
+.input-group label {
+    position: absolute;
+    left: 40px;
+    top: 12px;
+    font-size: 1em;
+    color: #b2bec3;
+    transition: 0.3s ease;
+    pointer-events: none;
+}
+
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown) + label {
+    top: -10px;
+    font-size: 0.8em;
+    color: #0984e3;
+}

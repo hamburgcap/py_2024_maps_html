@@ -162,9 +162,9 @@ def save_progress(locations):
 def monitor_save_request(locations):
     """Monitor para salvar o progresso quando a tecla 'S' for pressionada."""
     while True:
-        if keyboard.is_pressed('s'):
+        if keyboard.is_pressed('#'):
             save_progress(locations)
-            time.sleep(1)  # Evita múltiplas salvagens consecutivas
+            time.sleep(30)  # Evita múltiplas salvagens consecutivas
 
 def main():
     start_time = time.time()  # Início do timer
