@@ -35,22 +35,4 @@ function initializeFirebase() {
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    // Verifica se o usuário está autenticado
-    auth.onAuthStateChanged(user => {
-        if (!user) {
-            alert('Você precisa estar logado para acessar esta página.');
-            window.location.href = '../login.html'; // Redireciona para a página de login
-        }
-    });
-
-    // Função para logout
-    function logout() {
-        auth.signOut().then(() => {
-            alert('Você saiu com sucesso.');
-            window.location.href = '../login.html'; // Redireciona para a página de login
-        });
-    }
-
-    // Disponibiliza a função logout globalmente
-    window.logout = logout;
 }
