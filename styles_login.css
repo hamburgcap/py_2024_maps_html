@@ -18,6 +18,18 @@ body {
     text-align: center; /* Centralizar textos e botões */
 }
 
+.logo {
+    max-width: 150px;
+    margin: 0 auto 20px;
+    display: block;
+}
+
+.description {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
 form {
     display: flex;
     flex-direction: column; /* Os campos ficam em uma coluna */
@@ -49,7 +61,7 @@ button {
     padding: 12px;
     font-size: 16px;
     font-weight: bold;
-    background-color: #007bff;
+    background: linear-gradient(90deg, #007bff, #0056b3);
     color: white;
     border: none;
     border-radius: 6px;
