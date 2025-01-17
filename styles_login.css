@@ -73,15 +73,16 @@ button:hover {
 
 .input-group .icon {
     position: absolute;
-    left: 10px;
-    top: 12px;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%); /* Center vertically */
     color: #b2bec3;
     font-size: 1.2em;
 }
 
 .input-group input {
     width: 100%;
-    padding: 12px 12px 12px 40px;
+    padding: 12px 12px 12px 45px; /* Adjust left padding for icon space */
     margin: 0;
     border: 1px solid #dfe6e9;
     border-radius: 6px;
@@ -96,7 +97,7 @@ button:hover {
 
 .input-group label {
     position: absolute;
-    left: 40px;
+    left: 45px; /* Align with the input text */
     top: 12px;
     font-size: 1em;
     color: #b2bec3;
@@ -109,4 +110,8 @@ button:hover {
     top: -10px;
     font-size: 0.8em;
     color: #0984e3;
+}
+
+.container {
+    padding: 30px 25px; /* Slightly increased for better spacing */
 }
