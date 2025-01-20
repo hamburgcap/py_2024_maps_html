@@ -203,3 +203,18 @@ function atualizarMarcadores() {
         }
     });
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    // Encontre todos os grupos de filtro
+    const filterGroups = document.querySelectorAll(".filter-group");
+
+    filterGroups.forEach(group => {
+        const header = group.querySelector("h4"); // O título do grupo
+        const items = Array.from(group.children).filter(child => child !== header);
+
+        // Adiciona um evento de clique ao título
+        header.addEventListener("click", () => {
+            group.classList.toggle("collapsed"); // Alterna a classe 'collapsed'
+        });
+    });
+});

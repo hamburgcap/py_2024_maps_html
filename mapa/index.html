@@ -3,7 +3,7 @@
 <head>
     <script src="firebase.js"></script>
     <link rel="stylesheet" href="styles.css">
-    <title>Rota dos Leilões - Mapa de Oportunidades T1</title>
+    <title>Rota do Arremate</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -19,15 +19,15 @@
 <body>
     <div id="top-bar">
         <button class="toggle-button" onclick="toggleFilterPanel()"><i class="fas fa-bars"></i></button>
-        <button onclick="logout()">Sair</button>
         <div class="logo">
             <img src="https://hamburgcap.com/py_2024_maps_html/logo.png" alt="Logo">
-            <span>Rota dos Leilões</span>
+            <span>Rota do Arremate</span>
         </div>
+        <button class="logout-button" onclick="logout()">Sair</button>
     </div>
 
     <div id="filter-panel">
-        <h3>Filtros</h3>
+        <h3>Mapa de Oportunidades</h3>
 
         <div class="filter-group">
             <h4>Modalidade de Venda</h4>
@@ -54,7 +54,6 @@
                 <div id="discount-slider"></div>
             </div>
         </div>
-        <button onclick="logout()">Sair</button>
     </div>
 
     <div id="map"></div>
