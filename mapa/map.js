@@ -205,14 +205,21 @@ function atualizarMarcadores() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Encontre todos os grupos de filtro
+    // Seleciona o painel principal e seu título
+    const filterPanel = document.getElementById("filter-panel");
+    const panelHeader = filterPanel.querySelector("h3"); // Título principal
+
+    // Adiciona funcionalidade de retração ao título principal
+    panelHeader.addEventListener("click", () => {
+        filterPanel.classList.toggle("collapsed"); // Alterna a classe 'collapsed'
+    });
+
+    // Seleciona todos os grupos de filtros
     const filterGroups = document.querySelectorAll(".filter-group");
 
+    // Configura retração para cada grupo individual
     filterGroups.forEach(group => {
-        const header = group.querySelector("h4"); // O título do grupo
-        const items = Array.from(group.children).filter(child => child !== header);
-
-        // Adiciona um evento de clique ao título
+        const header = group.querySelector("h4"); // Título do grupo
         header.addEventListener("click", () => {
             group.classList.toggle("collapsed"); // Alterna a classe 'collapsed'
         });

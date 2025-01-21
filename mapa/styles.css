@@ -93,6 +93,8 @@ body {
     font-size: 1em; /* Reduzido de 1.5em */
     color: #333;
     font-weight: bold;
+    cursor: pointer; /* Permite clicar no título principal */
+    user-select: none; /* Evita seleção de texto ao clicar */
 }
 
 .filter-group {
@@ -113,16 +115,19 @@ body {
     margin-bottom: 5px;
     cursor: pointer; /* Indica que o título é clicável */
     user-select: none; /* Evita seleção de texto ao clicar */
+    transition: all 0.3s ease;
 }
 
-.filter-group.collapsed > div {
-    display: none; /* Esconde os itens quando o grupo está recolhido */
-}
 
+#filter-panel.collapsed > .filter-group {
+    display: none; /* Esconde todos os grupos de filtros */
+}
 .filter-group div {
     margin-bottom: 3px;
 }
-
+.filter-group.collapsed > div {
+    display: none; /* Esconde os itens quando o grupo está recolhido */
+}
 .price-range {
     margin-top: 10px;
 }

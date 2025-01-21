@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="styles_login.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Rota dos Leilões</title>
+    <title>Login - Rota do Arremate</title>
     <!-- Scripts do Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
@@ -40,13 +40,13 @@
             const resetPasswordLink = document.getElementById('reset-password');
 
             if (isLogin) {
-                formTitle.innerText = 'Login';
+                formTitle.innerText = 'Rota do Arremate - Login';
                 formButton.innerText = 'Entrar';
-                toggleMessage.innerHTML = 'Não tem uma conta? <a href="#" onclick="toggleForm()">Cadastrar</a>';
+                toggleMessage.innerHTML = 'Não tem uma conta? <a href="#" onclick="toggleForm()">Cadastrar gratuitamente</a>';
                 resetPasswordLink.style.display = 'block';
             } else {
-                formTitle.innerText = 'Cadastro';
-                formButton.innerText = 'Cadastrar';
+                formTitle.innerText = 'Rota do Arremate - Cadastro';
+                formButton.innerText = 'Cadastrar gratuitamente';
                 toggleMessage.innerHTML = 'Já tem uma conta? <a href="#" onclick="toggleForm()">Entrar</a>';
                 resetPasswordLink.style.display = 'none';
             }
@@ -138,8 +138,8 @@
 </head>
 <body>
     <div class="container">
-        <img src="logo.png" alt="Rota dos Leilões" class="logo">
-        <h1 id="form-title">Rota dos Leilões</h1>
+        <img src="logo.png" alt="Rota do Arremate" class="logo">
+        <h1 id="form-title">Rota do Arremate</h1>
         <p class="description">Acesse gratuitamente o primeiro mapa com todos os imóveis em leilões da Caixa Econômica Federal.</p>
         <form id="loginForm">
             <input type="email" id="email" placeholder="E-mail" required>
