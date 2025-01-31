@@ -205,23 +205,29 @@ function atualizarMarcadores() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Seleciona o painel principal e seu título
-    const filterPanel = document.getElementById("filter-panel");
-    const panelHeader = filterPanel.querySelector("h3"); // Título principal
+    // Seleciona todos os títulos <h3> dentro do painel de filtros
+    const headers = document.querySelectorAll("#filter-panel h3");
 
-    // Adiciona funcionalidade de retração ao título principal
-    panelHeader.addEventListener("click", () => {
-        filterPanel.classList.toggle("collapsed"); // Alterna a classe 'collapsed'
+    headers.forEach(header => {
+        header.addEventListener("click", () => {
+            // Encontra o próximo elemento e alterna entre visível/oculto
+            let nextElement = header.nextElementSibling;
+            while (nextElement && nextElement.tagName !== "H3") {
+                nextElement.classList.toggle("collapsed");
+                nextElement = nextElement.nextElementSibling;
+            }
+        });
     });
 
-    // Seleciona todos os grupos de filtros
+    // Seleciona todos os grupos de filtros para retração individual
     const filterGroups = document.querySelectorAll(".filter-group");
 
-    // Configura retração para cada grupo individual
     filterGroups.forEach(group => {
-        const header = group.querySelector("h4"); // Título do grupo
-        header.addEventListener("click", () => {
-            group.classList.toggle("collapsed"); // Alterna a classe 'collapsed'
-        });
+        const header = group.querySelector("h4");
+        if (header) {
+            header.addEventListener("click", () => {
+                group.classList.toggle("collapsed");
+            });
+        }
     });
 });

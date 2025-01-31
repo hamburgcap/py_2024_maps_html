@@ -223,3 +223,7 @@ body {
         margin-top: 2px;
     }
 }
+
+.collapsed {
+    display: none;
+}
