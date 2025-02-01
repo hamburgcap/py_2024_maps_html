@@ -55,10 +55,32 @@
             </div>
         </div>
 
-        <h3>Histórico de Oportunidades</h3>
+        <h3 id="historico-oportunidades">Histórico de Oportunidades</h3>
+
         <div class="filter-group">
             <h4>Modalidade de Venda</h4>
-            <div id="filter2-modalidade"></div>
+            <div id="filter-modalidade-resultados"></div>
+        </div>
+
+        <div class="filter-group">
+            <h4>Tipo</h4>
+            <div id="filter-tipo-resultados"></div>
+        </div>
+
+        <div class="filter-group">
+            <h4>Faixa de Preço</h4>
+            <div class="price-range">
+                <label for="price-range">R$ <span id="price-min">0</span> - R$ <span id="price-max">1000000</span></label>
+                <div id="price-slider-resultados"></div>
+            </div>
+        </div>
+
+        <div class="filter-group">
+            <h4>Faixa de Desconto</h4>
+            <div class="price-range">
+                <label for="discount-range"><span id="discount-min">0</span>% - <span id="discount-max">100</span>%</label>
+                <div id="discount-slider-resultados"></div>
+            </div>
         </div>
     </div>
 
@@ -119,7 +141,15 @@
                             }
                             // Reset the flag so that the script is reloaded next time.
                             mapLoaded = false;
-                        } else {
+                        }
+                        else {
+                          if (window.map) {
+                              window.map.remove();
+                              window.map = null;
+                              console.log("Map destroyed.");
+                          }
+                          // Reset the flag so that the script is reloaded next time.
+                          mapLoaded = false;
                             // When expanding:
                             if (!mapLoaded) {
                                 const script = document.createElement("script");
@@ -144,7 +174,49 @@
                                 }
                             }
                         }
-                    } else {
+                    } if (this.id === "historico-oportunidades") {
+                        if (isExpanded) {
+                            // When collapsing: remove the map if it exists
+                            if (window.map) {
+                                window.map.remove();
+                                window.map = null;
+                                console.log("Map destroyed.");
+                            }
+                            // Reset the flag so that the script is reloaded next time.
+                            mapLoaded = false;
+                        } else {
+                          if (window.map) {
+                              window.map.remove();
+                              window.map = null;
+                              console.log("Map destroyed.");
+                          }
+                          // Reset the flag so that the script is reloaded next time.
+                          mapLoaded = false;
+                            // When expanding:
+                            if (!mapLoaded) {
+                                const script = document.createElement("script");
+                                // Force a fresh load by appending a unique query parameter.
+                                script.src = "map_resultados.js?reload=" + new Date().getTime();
+                                script.onload = function() {
+                                    console.log("map_resultados.js loaded successfully!");
+                                    if (typeof window.initializeMap === 'function') {
+                                        window.initializeMap();
+                                    } else {
+                                        console.error("initializeMap is not defined.");
+                                    }
+                                };
+                                script.onerror = function() {
+                                    console.error("Error loading map_resultados.js.");
+                                };
+                                document.body.appendChild(script);
+                                mapLoaded = true;
+                            } else {
+                                if (!window.map && typeof window.initializeMap === 'function') {
+                                    window.initializeMap();
+                                }
+                            }
+                        }
+                    }else {
                         // If another section (e.g. "Histórico de Oportunidades") is clicked:
                         if (window.map) {
                             window.map.remove();
