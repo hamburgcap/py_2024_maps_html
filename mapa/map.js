@@ -1,6 +1,8 @@
-// Arquivo: map.js
+// ======================= map.js =======================
 
-// Função debounce para limitar chamadas frequentes
+// --- Helper Functions ---
+
+// Debounce function to limit frequent calls
 function debounce(func, delay) {
     let timeout;
     return function (...args) {
@@ -9,120 +11,7 @@ function debounce(func, delay) {
     };
 }
 
-// Função para alternar o painel de filtros
-function toggleFilterPanel() {
-    const filterPanel = document.getElementById('filter-panel');
-    filterPanel.classList.toggle('hidden');
-}
-
-// Inicializa o mapa com os controles de zoom no lado direito
-const map = L.map('map', {
-    zoomControl: false // Desativa o controle padrão de zoom
-}).setView([-23.55052, -46.633308], 5);
-
-// Adiciona os controles de zoom no lado direito
-L.control.zoom({
-    position: 'topright' // Define a posição como canto superior direito
-}).addTo(map);
-
-
-// Adiciona o tile layer do OpenStreetMap
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '© OpenStreetMap contributors'
-}).addTo(map);
-
-// Cria o grupo de clusters
-const markers = L.markerClusterGroup();
-let allMarkers = []; // Armazena todos os marcadores para reutilização
-
-// Configura sliders
-$(function () {
-    $("#price-slider").slider({
-        range: true,
-        min: 0,
-        max: 1000000,
-        step: 1000,
-        values: [0, 1000000],
-        slide: debounce(function (event, ui) {
-            $("#price-min").text(ui.values[0]);
-            $("#price-max").text(ui.values[1]);
-            atualizarMarcadores();
-        }, 200)
-    });
-
-    $("#price-min").text($("#price-slider").slider("values", 0));
-    $("#price-max").text($("#price-slider").slider("values", 1));
-
-    $("#discount-slider").slider({
-        range: true,
-        min: 0,
-        max: 100,
-        step: 1,
-        values: [0, 100],
-        slide: debounce(function (event, ui) {
-            $("#discount-min").text(ui.values[0]);
-            $("#discount-max").text(ui.values[1]);
-            atualizarMarcadores();
-        }, 200)
-    });
-
-    $("#discount-min").text($("#discount-slider").slider("values", 0));
-    $("#discount-max").text($("#discount-slider").slider("values", 1));
-});
-
-// Carrega dados do arquivo JSON e popula os marcadores
-fetch('locations.json?version=' + new Date().getTime())
-    .then(response => response.json())
-    .then(data => {
-        const modalidades = new Set();
-        const tipos = new Set();
-
-        data.forEach(location => {
-            modalidades.add(location.modalidade_de_venda);
-            tipos.add(location.tipo);
-
-            // Define ícones e rótulos para os marcadores
-            const iconHtml = definirIcone(location.tipo, location.desconto);
-            const customIcon = L.divIcon({
-                className: 'custom-icon',
-                html: iconHtml,
-                iconSize: [30, 30],
-                iconAnchor: [15, 30]
-            });
-
-            // Cria o marcador
-            const marker = L.marker([location.lat, location.lng], { icon: customIcon })
-                .bindPopup(
-                    `<b>Preço: R$${location.preco}</b><br>` +
-                    `<b>Desconto: ${location.desconto}%</b><br>` +
-                    `<b>Tipo: ${location.tipo}</b><br>` +
-                    `<b>Modalidade: ${location.modalidade_de_venda}</b><br>` +
-                    `<a href="${location.link_de_acesso}" target="_blank">Acessar o Imóvel</a>`
-                );
-
-            // Armazena o marcador e seus atributos
-            allMarkers.push({
-                marker,
-                modalidade: location.modalidade_de_venda,
-                tipo: location.tipo,
-                preco: location.preco,
-                desconto: location.desconto !== null ? location.desconto : -1
-            });
-
-            // Adiciona ao cluster
-            markers.addLayer(marker);
-        });
-
-        // Adiciona o cluster ao mapa
-        map.addLayer(markers);
-
-        // Preenche filtros dinâmicos
-        preencherFiltros(modalidades, tipos);
-    })
-    .catch(error => console.error('Erro ao carregar o JSON:', error));
-
-// Define ícones e rótulos de descontos para os marcadores
+// Define marker icon based on type and discount
 function definirIcone(tipo, desconto) {
     let iconHtml;
     if (['Casa', 'Apartamento', 'Sobrado', 'Prédio'].includes(tipo)) {
@@ -134,17 +23,21 @@ function definirIcone(tipo, desconto) {
     } else {
         iconHtml = '<i class="fas fa-map-marker-alt" style="font-size: 30px; color: #0000FF;"></i>';
     }
-
     if (desconto >= 30) {
         iconHtml += `<div class="discount-label">${Math.round(desconto)}%</div>`;
     }
-
     return iconHtml;
 }
 
-// Preenche filtros dinâmicos
+// Create filters for dynamic filtering
 function preencherFiltros(modalidades, tipos) {
+    // Get the container for 'modalidade' filters and remove all its children
     const filterModalidadeDiv = document.getElementById('filter-modalidade');
+    while (filterModalidadeDiv.firstChild) {
+        filterModalidadeDiv.removeChild(filterModalidadeDiv.firstChild);
+    }
+
+    // Create and append new 'modalidade' filter items
     modalidades.forEach(modalidade => {
         const container = document.createElement('div');
         const checkbox = criarCheckbox('modalidade', modalidade);
@@ -153,7 +46,13 @@ function preencherFiltros(modalidades, tipos) {
         filterModalidadeDiv.appendChild(container);
     });
 
+    // Get the container for 'tipo' filters and remove all its children
     const filterTipoDiv = document.getElementById('filter-tipo');
+    while (filterTipoDiv.firstChild) {
+        filterTipoDiv.removeChild(filterTipoDiv.firstChild);
+    }
+
+    // Create and append new 'tipo' filter items
     tipos.forEach(tipo => {
         const container = document.createElement('div');
         const checkbox = criarCheckbox('tipo', tipo);
@@ -163,7 +62,7 @@ function preencherFiltros(modalidades, tipos) {
     });
 }
 
-// Cria elementos de checkbox para os filtros
+// Create checkbox element for a filter
 function criarCheckbox(categoria, valor) {
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
@@ -179,18 +78,17 @@ function criarCheckbox(categoria, valor) {
     return { checkbox, label };
 }
 
-// Atualiza os marcadores com base nos filtros
+// Update markers based on filter values
 function atualizarMarcadores() {
-    const modalidadesSelecionadas = Array.from(document.querySelectorAll('#filter-modalidade input:checked')).map(checkbox => checkbox.value);
-    const tiposSelecionados = Array.from(document.querySelectorAll('#filter-tipo input:checked')).map(checkbox => checkbox.value);
+    const modalidadesSelecionadas = Array.from(document.querySelectorAll('#filter-modalidade input:checked')).map(cb => cb.value);
+    const tiposSelecionados = Array.from(document.querySelectorAll('#filter-tipo input:checked')).map(cb => cb.value);
     const precoMin = $("#price-slider").slider("values", 0);
     const precoMax = $("#price-slider").slider("values", 1);
     const descontoMin = $("#discount-slider").slider("values", 0);
     const descontoMax = $("#discount-slider").slider("values", 1);
 
-    markers.clearLayers(); // Remove marcadores antigos
-
-    allMarkers.forEach(item => {
+    window.markers.clearLayers();
+    window.allMarkers.forEach(item => {
         if (
             modalidadesSelecionadas.includes(item.modalidade) &&
             tiposSelecionados.includes(item.tipo) &&
@@ -199,35 +97,134 @@ function atualizarMarcadores() {
             item.desconto >= descontoMin &&
             item.desconto <= descontoMax
         ) {
-            markers.addLayer(item.marker);
+            window.markers.addLayer(item.marker);
         }
     });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    // Seleciona todos os títulos <h3> dentro do painel de filtros
-    const headers = document.querySelectorAll("#filter-panel h3");
-
-    headers.forEach(header => {
-        header.addEventListener("click", () => {
-            // Encontra o próximo elemento e alterna entre visível/oculto
-            let nextElement = header.nextElementSibling;
-            while (nextElement && nextElement.tagName !== "H3") {
-                nextElement.classList.toggle("collapsed");
-                nextElement = nextElement.nextElementSibling;
-            }
-        });
+// Initialize jQuery UI sliders
+$(function () {
+    $("#price-slider").slider({
+        range: true,
+        min: 0,
+        max: 1000000,
+        step: 1000,
+        values: [0, 1000000],
+        slide: debounce(function (event, ui) {
+            $("#price-min").text(ui.values[0]);
+            $("#price-max").text(ui.values[1]);
+            atualizarMarcadores();
+        }, 200)
     });
+    $("#price-min").text($("#price-slider").slider("values", 0));
+    $("#price-max").text($("#price-slider").slider("values", 1));
 
-    // Seleciona todos os grupos de filtros para retração individual
-    const filterGroups = document.querySelectorAll(".filter-group");
-
-    filterGroups.forEach(group => {
-        const header = group.querySelector("h4");
-        if (header) {
-            header.addEventListener("click", () => {
-                group.classList.toggle("collapsed");
-            });
-        }
+    $("#discount-slider").slider({
+        range: true,
+        min: 0,
+        max: 100,
+        step: 1,
+        values: [0, 100],
+        slide: debounce(function (event, ui) {
+            $("#discount-min").text(ui.values[0]);
+            $("#discount-max").text(ui.values[1]);
+            atualizarMarcadores();
+        }, 200)
     });
+    $("#discount-min").text($("#discount-slider").slider("values", 0));
+    $("#discount-max").text($("#discount-slider").slider("values", 1));
 });
+
+// ======================= Map Initialization =======================
+
+// Wrap all map-related code in a function so it can be (re)initialized when needed.
+function initializeMap() {
+    console.log("initializeMap() called.");
+
+    // Remove any existing element with id "map" from the DOM.
+    let oldMapContainer = document.getElementById('map');
+    if (oldMapContainer) {
+        oldMapContainer.parentNode.removeChild(oldMapContainer);
+        console.log("Existing #map container removed.");
+    }
+
+    // Create a new map container element.
+    const newMapContainer = document.createElement('div');
+    newMapContainer.id = 'map';
+    // Append the new container to the body (or, if you have a specific parent element, use that).
+    document.body.appendChild(newMapContainer);
+    console.log("New #map container created.");
+
+    // Initialize the Leaflet map using the new container.
+    window.map = L.map('map', {
+        zoomControl: false
+    }).setView([-23.55052, -46.633308], 5);
+
+    L.control.zoom({
+        position: 'topright'
+    }).addTo(window.map);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(window.map);
+
+    // Create the marker cluster group and initialize marker storage.
+    window.markers = L.markerClusterGroup();
+    window.allMarkers = [];
+
+    // Fetch the JSON data and populate markers.
+    fetch('locations.json?version=' + new Date().getTime())
+        .then(response => response.json())
+        .then(data => {
+            const modalidades = new Set();
+            const tipos = new Set();
+
+            data.forEach(location => {
+                modalidades.add(location.modalidade_de_venda);
+                tipos.add(location.tipo);
+
+                const iconHtml = definirIcone(location.tipo, location.desconto);
+                const customIcon = L.divIcon({
+                    className: 'custom-icon',
+                    html: iconHtml,
+                    iconSize: [30, 30],
+                    iconAnchor: [15, 30]
+                });
+
+                const marker = L.marker([location.lat, location.lng], { icon: customIcon })
+                    .bindPopup(
+                        `<b>Preço: R$${location.preco}</b><br>` +
+                        `<b>Desconto: ${location.desconto}%</b><br>` +
+                        `<b>Tipo: ${location.tipo}</b><br>` +
+                        `<b>Modalidade: ${location.modalidade_de_venda}</b><br>` +
+                        `<a href="${location.link_de_acesso}" target="_blank">Acessar o Imóvel</a>`
+                    );
+
+                window.allMarkers.push({
+                    marker,
+                    modalidade: location.modalidade_de_venda,
+                    tipo: location.tipo,
+                    preco: location.preco,
+                    desconto: location.desconto !== null ? location.desconto : 0
+                });
+
+                window.markers.addLayer(marker);
+            });
+
+            window.map.addLayer(window.markers);
+            preencherFiltros(modalidades, tipos);
+        })
+        .catch(error => console.error('Erro ao carregar o JSON:', error));
+
+    // Delay and then force Leaflet to recalculate the map size.
+    setTimeout(() => {
+        if (window.map) {
+            window.map.invalidateSize();
+            console.log("Map size invalidated.");
+        }
+    }, 500);
+}
+
+// Expose the initializeMap function globally so that index.html can call it.
+window.initializeMap = initializeMap;

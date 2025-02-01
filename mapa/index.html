@@ -26,9 +26,8 @@
         <button class="logout-button" onclick="logout()">Sair</button>
     </div>
 
-
     <div id="filter-panel">
-        <h3>Mapa de Oportunidades</h3>
+        <h3 id="mapa-oportunidades">Mapa de Oportunidades</h3>
 
         <div class="filter-group">
             <h4>Modalidade de Venda</h4>
@@ -55,20 +54,119 @@
                 <div id="discount-slider"></div>
             </div>
         </div>
-      
 
-        <h3>Historico de Oportunidades</h3>
+        <h3>Histórico de Oportunidades</h3>
         <div class="filter-group">
             <h4>Modalidade de Venda</h4>
             <div id="filter2-modalidade"></div>
         </div>
-
     </div>
 
     <div id="map"></div>
 
-    <!-- Adicione o map.js no final -->
-    <script src="map.js"></script>
+    <!-- Updated toggle and map handling script -->
+    <script>
+        let mapLoaded = false;  // Flag to check if map.js has been loaded
 
+        // Global function to toggle the filter panel visibility (used by the top bar button)
+        function toggleFilterPanel() {
+            const filterPanel = document.getElementById('filter-panel');
+            filterPanel.classList.toggle('hidden');
+        }
+        window.toggleFilterPanel = toggleFilterPanel;  // Expose globally
+
+        document.addEventListener("DOMContentLoaded", function() {
+            // Process all <h3> headers inside the filter panel.
+            document.querySelectorAll("#filter-panel h3").forEach(header => {
+                // Initially collapse the section (all sibling elements until the next <h3>)
+                let nextElement = header.nextElementSibling;
+                while (nextElement && nextElement.tagName !== "H3") {
+                    nextElement.classList.add("collapsed");
+                    nextElement = nextElement.nextElementSibling;
+                }
+
+                // Add click event listener to each header.
+                header.addEventListener("click", function() {
+                    // Determine if the current section is expanded (i.e. not collapsed)
+                    let isExpanded = !this.nextElementSibling.classList.contains("collapsed");
+
+                    // Collapse all other sections
+                    document.querySelectorAll("#filter-panel h3").forEach(otherHeader => {
+                        if (otherHeader !== this) {
+                            let otherElement = otherHeader.nextElementSibling;
+                            while (otherElement && otherElement.tagName !== "H3") {
+                                otherElement.classList.add("collapsed");
+                                otherElement = otherElement.nextElementSibling;
+                            }
+                        }
+                    });
+
+                    // Toggle the current section's contents based on the current state.
+                    let nextElement = this.nextElementSibling;
+                    while (nextElement && nextElement.tagName !== "H3") {
+                        nextElement.classList.toggle("collapsed", isExpanded);
+                        nextElement = nextElement.nextElementSibling;
+                    }
+
+                    // Special handling for "Mapa de Oportunidades"
+                    if (this.id === "mapa-oportunidades") {
+                        if (isExpanded) {
+                            // When collapsing: remove the map if it exists
+                            if (window.map) {
+                                window.map.remove();
+                                window.map = null;
+                                console.log("Map destroyed.");
+                            }
+                            // Reset the flag so that the script is reloaded next time.
+                            mapLoaded = false;
+                        } else {
+                            // When expanding:
+                            if (!mapLoaded) {
+                                const script = document.createElement("script");
+                                // Force a fresh load by appending a unique query parameter.
+                                script.src = "map.js?reload=" + new Date().getTime();
+                                script.onload = function() {
+                                    console.log("map.js loaded successfully!");
+                                    if (typeof window.initializeMap === 'function') {
+                                        window.initializeMap();
+                                    } else {
+                                        console.error("initializeMap is not defined.");
+                                    }
+                                };
+                                script.onerror = function() {
+                                    console.error("Error loading map.js.");
+                                };
+                                document.body.appendChild(script);
+                                mapLoaded = true;
+                            } else {
+                                if (!window.map && typeof window.initializeMap === 'function') {
+                                    window.initializeMap();
+                                }
+                            }
+                        }
+                    } else {
+                        // If another section (e.g. "Histórico de Oportunidades") is clicked:
+                        if (window.map) {
+                            window.map.remove();
+                            window.map = null;
+                            console.log("Map destroyed due to switching sections.");
+                            mapLoaded = false;
+                        }
+                    }
+                });
+            });
+
+            // Optionally, add click events for <h4> headers inside filter groups.
+            document.querySelectorAll("#filter-panel h4").forEach(header => {
+                header.addEventListener("click", function() {
+                    let nextElement = this.nextElementSibling;
+                    while (nextElement && nextElement.tagName !== "H4" && nextElement.tagName !== "H3") {
+                        nextElement.classList.toggle("collapsed");
+                        nextElement = nextElement.nextElementSibling;
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
