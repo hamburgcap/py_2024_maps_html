@@ -11,7 +11,7 @@ function debounce(func, delay) {
     };
 }
 
-// Define marker icon based on type and discount
+// Define marker icon based on type and perc_de_luta
 function definirIcone(tipo, perc_de_luta) {
     let iconHtml;
     if (['Casa', 'Apartamento', 'Sobrado', 'Prédio'].includes(tipo)) {
@@ -24,7 +24,7 @@ function definirIcone(tipo, perc_de_luta) {
         iconHtml = '<i class="fas fa-map-marker-alt" style="font-size: 30px; color: #0000FF;"></i>';
     }
     if (perc_de_luta <= 20) {
-        iconHtml += `<div class="discount-label">${Math.round(perc_de_luta)}%</div>`;
+        iconHtml += `<div class="perc_de_luta-label">${Math.round(perc_de_luta)}%</div>`;
     }
     return iconHtml;
 }
@@ -82,10 +82,10 @@ function criarCheckbox(categoria, valor) {
 function atualizarMarcadores() {
     const modalidadesSelecionadas = Array.from(document.querySelectorAll('#filter-modalidade-resultados input:checked')).map(cb => cb.value);
     const tiposSelecionados = Array.from(document.querySelectorAll('#filter-tipo-resultados input:checked')).map(cb => cb.value);
-    const Valor_OfertaMin = $("#price-slider-resultados").slider("values", 0);
-    const Valor_OfertaMax = $("#price-slider-resultados").slider("values", 1);
-    const perc_de_lutaMin = $("#discount-slider-resultados").slider("values", 0);
-    const perc_de_lutaMax = $("#discount-slider-resultados").slider("values", 1);
+    const Valor_OfertaMin = $("#Valor_Oferta-slider-resultados").slider("values", 0);
+    const Valor_OfertaMax = $("#Valor_Oferta-slider-resultados").slider("values", 1);
+    const perc_de_lutaMin = $("#perc_de_luta-slider-resultados").slider("values", 0);
+    const perc_de_lutaMax = $("#perc_de_luta-slider-resultados").slider("values", 1);
 
     window.markers.clearLayers();
     window.allMarkers.forEach(item => {
@@ -104,35 +104,35 @@ function atualizarMarcadores() {
 
 // Initialize jQuery UI sliders
 $(function () {
-    $("#price-slider").slider({
+    $("#Valor_Oferta-slider").slider({
         range: true,
         min: 0,
         max: 1000000,
         step: 1000,
-        values: [0, 1000000],
+        values: [0, 2000000],
         slide: debounce(function (event, ui) {
-            $("#price-min").text(ui.values[0]);
-            $("#price-max").text(ui.values[1]);
+            $("#Valor_Oferta-min").text(ui.values[0]);
+            $("#Valor_Oferta-max").text(ui.values[1]);
             atualizarMarcadores();
         }, 200)
     });
-    $("#price-min").text($("#price-slider").slider("values", 0));
-    $("#price-max").text($("#price-slider").slider("values", 1));
+    $("#Valor_Oferta-min").text($("#Valor_Oferta-slider").slider("values", 0));
+    $("#Valor_Oferta-max").text($("#Valor_Oferta-slider").slider("values", 1));
 
-    $("#discount-slider").slider({
+    $("#perc_de_luta-slider").slider({
         range: true,
         min: 0,
-        max: 100,
+        max: 100000,
         step: 1,
-        values: [0, 100],
+        values: [0, 100000],
         slide: debounce(function (event, ui) {
-            $("#discount-min").text(ui.values[0]);
-            $("#discount-max").text(ui.values[1]);
+            $("#perc_de_luta-min").text(ui.values[0]);
+            $("#perc_de_luta-max").text(ui.values[1]);
             atualizarMarcadores();
         }, 200)
     });
-    $("#discount-min").text($("#discount-slider").slider("values", 0));
-    $("#discount-max").text($("#discount-slider").slider("values", 1));
+    $("#perc_de_luta-min").text($("#perc_de_luta-slider").slider("values", -100000000));
+    $("#perc_de_luta-max").text($("#perc_de_luta-slider").slider("values", 100000000));
 });
 
 // ======================= Map Initialization =======================
@@ -182,9 +182,9 @@ function initializeMap() {
 
             data.forEach(location => {
                 modalidades.add(location.modalidade_de_venda);
-                tipos.add(location.tipo);
+                tipos.add(location.n);
 
-                const iconHtml = definirIcone(location.tipo, location.perc_de_luta);
+                const iconHtml = definirIcone(location.n, location.perc_de_luta);
                 const customIcon = L.divIcon({
                     className: 'custom-icon',
                     html: iconHtml,
@@ -196,18 +196,19 @@ function initializeMap() {
                     .bindPopup(
                         `<b>Valor Oferta: R$${location.Valor_Oferta}</b><br>` +
                         `<b>Percentual de Luta: ${location.perc_de_luta}%</b><br>` +
-                        `<b>Tipo: ${location.tipo}</b><br>` +
+                        `<b>Tipo: ${location.n}</b><br>` +
                         `<b>Modalidade: ${location.modalidade_de_venda}</b><br>` +
                         `<b>Proponente 1: ${location.Proponente_1}</b><br>` +
                         `<b>Proponente 2: ${location.Proponente_2}</b><br>` +
-                        `<b>Data da Licitação: ${location.data_da_licitacao}</b><br>` +
-                        `<a href="${location.link_de_acesso}" target="_blank">Acessar o Imóvel</a>`
+                        `<b>Data da Licitação: ${location.data_licitacao}</b><br>` +
+                        `<a href="${location.link_de_acesso}" target="_blank">Acessar o Imóvel</a>`,
+                        { offset: [0, -30] } // Moves the popup UP by 30 pixels
                     );
 
                 window.allMarkers.push({
                     marker,
                     modalidade: location.modalidade_de_venda,
-                    tipo: location.tipo,
+                    tipo: location.n,
                     Valor_Oferta: location.Valor_Oferta,
                     perc_de_luta: location.perc_de_luta !== null ? location.perc_de_luta : 0
                 });

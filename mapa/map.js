@@ -198,7 +198,8 @@ function initializeMap() {
                         `<b>Desconto: ${location.desconto}%</b><br>` +
                         `<b>Tipo: ${location.tipo}</b><br>` +
                         `<b>Modalidade: ${location.modalidade_de_venda}</b><br>` +
-                        `<a href="${location.link_de_acesso}" target="_blank">Acessar o Imóvel</a>`
+                        `<a href="${location.link_de_acesso}" target="_blank">Acessar o Imóvel</a>`,
+                        { offset: [0, -30] } // Moves the popup UP by 30 pixels
                     );
 
                 window.allMarkers.push({
