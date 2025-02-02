@@ -179,10 +179,14 @@ function initializeMap() {
         .then(data => {
             const modalidades = new Set();
             const tipos = new Set();
+            let prices = [];  // NEW: Array to store prices
+            let discounts = []; // NEW: Array to store all discount values
 
             data.forEach(location => {
                 modalidades.add(location.modalidade_de_venda);
                 tipos.add(location.tipo);
+                prices.push(parseFloat(location.preco.replace(/,/g, '')));  // NEW: Collect each price
+                discounts.push(location.desconto !== null ? location.desconto : 0); // NEW: Collect each discount value
 
                 const iconHtml = definirIcone(location.tipo, location.desconto);
                 const customIcon = L.divIcon({
@@ -213,8 +217,29 @@ function initializeMap() {
                 window.markers.addLayer(marker);
             });
 
+            // NEW: Compute dynamic minimum and maximum price values
+           let minPrice = Math.min(...prices);
+           let maxPrice = Math.max(...prices);
+           // NEW: Compute dynamic minimum and maximum discount values
+           let minDiscount = Math.min(...discounts);
+           let maxDiscount = Math.max(...discounts);
+
+           // NEW: Update the slider with dynamic min and max values
+           $("#price-slider").slider("option", "min", minPrice);
+           $("#price-slider").slider("option", "max", maxPrice);
+           $("#price-slider").slider("option", "values", [minPrice, maxPrice]);
+           $("#price-min").text(minPrice);
+           $("#price-max").text(maxPrice);
+           // NEW: Update discount slider with dynamic values
+            $("#discount-slider").slider("option", "min", minDiscount);
+            $("#discount-slider").slider("option", "max", maxDiscount);
+            $("#discount-slider").slider("option", "values", [minDiscount, maxDiscount]);
+            $("#discount-min").text(minDiscount);
+            $("#discount-max").text(maxDiscount);
+
             window.map.addLayer(window.markers);
             preencherFiltros(modalidades, tipos);
+            console.log("Prices:", prices);
         })
         .catch(error => console.error('Erro ao carregar o JSON:', error));
 
