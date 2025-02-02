@@ -104,27 +104,27 @@ function atualizarMarcadores() {
 
 // Initialize jQuery UI sliders
 $(function () {
-    $("#Valor_Oferta-slider").slider({
+    $("#Valor_Oferta-slider-resultados").slider({
         range: true,
         min: 0,
         max: 1000000,
         step: 1000,
         values: [0, 2000000],
         slide: debounce(function (event, ui) {
-            $("#Valor_Oferta-min").text(ui.values[0]);
-            $("#Valor_Oferta-max").text(ui.values[1]);
+            $("#Valor_Oferta-min").text(ui.values[0].toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0, maximumFractionDigits: 0 }));
+            $("#Valor_Oferta-max").text(ui.values[1].toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0, maximumFractionDigits: 0 }));
             atualizarMarcadores();
         }, 200)
     });
     $("#Valor_Oferta-min").text($("#Valor_Oferta-slider").slider("values", 0));
     $("#Valor_Oferta-max").text($("#Valor_Oferta-slider").slider("values", 1));
 
-    $("#perc_de_luta-slider").slider({
+    $("#perc_de_luta-slider-resultados").slider({
         range: true,
         min: 0,
-        max: 100000,
+        max: 100,
         step: 1,
-        values: [0, 100000],
+        values: [0, 100],
         slide: debounce(function (event, ui) {
             $("#perc_de_luta-min").text(ui.values[0]);
             $("#perc_de_luta-max").text(ui.values[1]);
@@ -173,42 +173,36 @@ function initializeMap() {
     window.markers = L.markerClusterGroup();
     window.allMarkers = [];
 
-    // Fetch the JSON data and populate markers.
+    // Fetch JSON data
     fetch('locations_resultados.json?version=' + new Date().getTime())
         .then(response => response.json())
         .then(data => {
             const modalidades = new Set();
             const tipos = new Set();
+            let ofertaValues = [];
+            let lutaValues = [];
 
             data.forEach(location => {
                 modalidades.add(location.modalidade_de_venda);
-                tipos.add(location.n);
+                tipos.add(location.tipo);
+                ofertaValues.push(parseFloat(location.Valor_Oferta));
+                lutaValues.push(location.perc_de_luta !== null ? location.perc_de_luta : 0);
 
-                const iconHtml = definirIcone(location.n, location.perc_de_luta);
-                const customIcon = L.divIcon({
-                    className: 'custom-icon',
-                    html: iconHtml,
-                    iconSize: [30, 30],
-                    iconAnchor: [15, 30]
-                });
-
-                const marker = L.marker([location.lat, location.lng], { icon: customIcon })
+                const marker = L.marker([location.lat, location.lng])
                     .bindPopup(
                         `<b>Valor Oferta: R$${location.Valor_Oferta}</b><br>` +
                         `<b>Percentual de Luta: ${location.perc_de_luta}%</b><br>` +
-                        `<b>Tipo: ${location.n}</b><br>` +
+                        `<b>Tipo: ${location.tipo}</b><br>` +
                         `<b>Modalidade: ${location.modalidade_de_venda}</b><br>` +
                         `<b>Proponente 1: ${location.Proponente_1}</b><br>` +
                         `<b>Proponente 2: ${location.Proponente_2}</b><br>` +
-                        `<b>Data da Licitação: ${location.data_licitacao}</b><br>` +
-                        `<a href="${location.link_de_acesso}" target="_blank">Acessar o Imóvel</a>`,
-                        { offset: [0, -30] } // Moves the popup UP by 30 pixels
+                        `<b>Data da Licitação: ${location.data_licitacao}</b><br>`
                     );
 
                 window.allMarkers.push({
                     marker,
                     modalidade: location.modalidade_de_venda,
-                    tipo: location.n,
+                    tipo: location.tipo,
                     Valor_Oferta: location.Valor_Oferta,
                     perc_de_luta: location.perc_de_luta !== null ? location.perc_de_luta : 0
                 });
@@ -216,6 +210,26 @@ function initializeMap() {
                 window.markers.addLayer(marker);
             });
 
+            // Dynamically set slider values
+            let minOferta = Math.min(...ofertaValues);
+            let maxOferta = Math.max(...ofertaValues);
+            let minLuta = Math.min(...lutaValues);
+            let maxLuta = Math.max(...lutaValues);
+
+            $("#Valor_Oferta-slider-resultados").slider("option", "min", minOferta);
+            $("#Valor_Oferta-slider-resultados").slider("option", "max", maxOferta);
+            $("#Valor_Oferta-slider-resultados").slider("option", "values", [minOferta, maxOferta]);
+            $("#Valor_Oferta-min").text(minOferta.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0, maximumFractionDigits: 0 }));
+            $("#Valor_Oferta-max").text(maxOferta.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0, maximumFractionDigits: 0 }));
+
+
+            $("#perc_de_luta-slider-resultados").slider("option", "min", minLuta);
+            $("#perc_de_luta-slider-resultados").slider("option", "max", maxLuta);
+            $("#perc_de_luta-slider-resultados").slider("option", "values", [minLuta, maxLuta]);
+            $("#perc_de_luta-min").text(minLuta);
+            $("#perc_de_luta-max").text(maxLuta);
+
+            // Add markers to the map
             window.map.addLayer(window.markers);
             preencherFiltros(modalidades, tipos);
         })

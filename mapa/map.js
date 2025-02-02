@@ -107,12 +107,12 @@ $(function () {
     $("#price-slider").slider({
         range: true,
         min: 0,
-        max: 1000000,
+        max: 200000000,
         step: 1000,
-        values: [0, 1000000],
+        values: [0, 200000000],
         slide: debounce(function (event, ui) {
-            $("#price-min").text(ui.values[0]);
-            $("#price-max").text(ui.values[1]);
+            $("#price-min").text(ui.values[0].toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0, maximumFractionDigits: 0 }));
+            $("#price-max").text(ui.values[1].toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0, maximumFractionDigits: 0 }));
             atualizarMarcadores();
         }, 200)
     });
@@ -228,8 +228,9 @@ function initializeMap() {
            $("#price-slider").slider("option", "min", minPrice);
            $("#price-slider").slider("option", "max", maxPrice);
            $("#price-slider").slider("option", "values", [minPrice, maxPrice]);
-           $("#price-min").text(minPrice);
-           $("#price-max").text(maxPrice);
+           $("#price-min").text(minPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0, maximumFractionDigits: 0 }));
+           $("#price-max").text(maxPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0, maximumFractionDigits: 0 }));
+
            // NEW: Update discount slider with dynamic values
             $("#discount-slider").slider("option", "min", minDiscount);
             $("#discount-slider").slider("option", "max", maxDiscount);
