@@ -42,16 +42,6 @@ function handleForm() {
     }
 }
 
-function logout() {
-    const cognitoUser = userPool.getCurrentUser();
-    if (cognitoUser) {
-        cognitoUser.signOut();
-        sessionStorage.removeItem("idToken"); // Clear token storage
-        alert("Você saiu com sucesso.");
-        window.location.href = window.location.origin + "/py_2024_maps_html/login_aws.html";//window.location.href = "../login_aws.html"; // Redirect to login page
-    }
-}
-
 function loginUser(email, password) {
     console.log("🔐 Attempting login with email:", email);
 
@@ -220,16 +210,17 @@ function resetPassword() {
     window.currentCognitoUser = cognitoUser;
 }
 
-// Função de logout
 function logout() {
     const cognitoUser = userPool.getCurrentUser();
     if (cognitoUser) {
         cognitoUser.signOut();
-        sessionStorage.removeItem("idToken");
-        sessionStorage.removeItem("loggedInUser"); // ✅ Remove user session
-        alert("Você saiu com sucesso.");
-          window.location.href = window.location.origin + "/py_2024_maps_html/login_aws.html";//window.location.href = "../login_aws.html"; // Redirect to login page
     }
+
+    sessionStorage.clear();
+    alert("Você saiu com sucesso!");
+
+    // ✅ Redirect dynamically (fix applied in redirectTo())
+    redirectTo("/login_aws.html");
 }
 
 function checkAuthentication() {
@@ -239,7 +230,7 @@ function checkAuthentication() {
         console.warn("⚠️ No authenticated user found.");
         sessionStorage.removeItem("loggedInUser");
         sessionStorage.removeItem("userGroup");
-        window.location.href = window.location.origin + "/py_2024_maps_html/login_aws.html";//window.location.href = "../login_aws.html"; // Redirect to login page
+        redirectTo("/mapa/index_aws.html");
         return;
     }
 
@@ -252,7 +243,7 @@ function checkAuthentication() {
                     console.error("❌ Session renewal failed:", err);
                     sessionStorage.removeItem("loggedInUser");
                     sessionStorage.removeItem("userGroup");
-                    window.location.href = window.location.origin + "/py_2024_maps_html/login_aws.html";//window.location.href = "../login_aws.html"; // Redirect to login page
+                    redirectTo("/mapa/index_aws.html");
                 } else {
                     console.log("✅ Session renewed!");
                     sessionStorage.setItem("idToken", newSession.getIdToken().getJwtToken());
@@ -331,7 +322,7 @@ function handleLoginSuccess(session) {
     const idToken = session.getIdToken().getJwtToken();
     storeUserGroup(idToken);
     console.log("Login successful!");
-    window.location.href = window.location.origin + "/py_2024_maps_html/mapa/index_aws.html";//window.location.href = "/mapa/index_aws.html"; // Redirect to the main page
+    redirectTo("/mapa/index_aws.html");
 }
 
 function checkRedirection() {
@@ -344,25 +335,48 @@ function checkRedirection() {
         if (userGroup === "Basic") {
             console.log("🔄 Redirecting Basic user to dashboard...");
             if (!currentPath.endsWith("/mapa/index_aws.html")) {
-                console.log("🚀 Redirecting to /mapa/index_aws.html");
-                window.location.href = window.location.origin + "/py_2024_maps_html/mapa/index_aws.html";
+                redirectTo("/mapa/index_aws.html");
             } else {
                 console.log("✅ Already on /mapa/index_aws.html. No redirection needed.");
             }
         } else if (userGroup === "Premium") {
             console.log("🔄 Redirecting Premium user...");
             if (!currentPath.endsWith("/mapa/index_aws.html")) {
-                console.log("🚀 Redirecting to /premium_dashboard.html");
-                window.location.href = window.location.origin + "/py_2024_maps_html/mapa/index_aws.html"; // window.location.href = "/mapa/index_aws.html";
+                redirectTo("/mapa/index_aws.html"); // ✅ Redirect to correct premium page
             } else {
                 console.log("✅ Already on /mapa/index_aws.html. No redirection needed.");
             }
         } else {
             console.warn("⚠ User Group is missing or undefined. Ensure authentication is correct.");
         }
-    }, 500); // Delay ensures sessionStorage is fully updated before redirect
+    }, 500);
 }
 
+
+function getBasePath() {
+    const currentPath = window.location.pathname;
+
+    // ✅ Only return "/mapa" if the user is currently in a "mapa" page
+    if (currentPath.includes('/mapa/') && !currentPath.endsWith("login_aws.html")) {
+        return '/mapa';
+    }
+
+    // ✅ Otherwise, return an empty string (to avoid duplicate paths on logout)
+    return '';
+}
+
+function redirectTo(path) {
+    let basePath = getBasePath();
+
+    // ✅ If logging out, do NOT append "/mapa/"
+    if (path.includes("login_aws.html")) {
+        basePath = "";
+    }
+
+    const fullPath = window.location.origin + basePath + path;
+    console.log("🚀 Redirecting to:", fullPath);
+    window.location.href = fullPath;
+}
 
 console.log("User group stored in sessionStorage:", sessionStorage.getItem("userGroup"));
 

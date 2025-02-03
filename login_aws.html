@@ -57,19 +57,6 @@
         <p id="error-message"></p>
         <p id="loading-message"></p>
     </div>
-    <script>
-        function handleLogin() {
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
 
-            if (!email || !password) {
-                alert("⚠ Por favor, insira e-mail e senha.");
-                return;
-            }
-
-            // Call loginUser() from aws-auth.js
-            loginUser(email, password);
-        }
-    </script>
 </body>
 </html>
