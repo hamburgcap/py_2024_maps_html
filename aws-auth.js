@@ -224,7 +224,7 @@ function logout() {
     // ✅ Correct logout redirection
     redirectTo("/login_aws.html");
     }
-    else{redirectTo("py_2024_maps_html/login_aws.html")}
+    else{redirectTo("/py_2024_maps_html/login_aws.html")}
 }
 
 function checkAuthentication() {
