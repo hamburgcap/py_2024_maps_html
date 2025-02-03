@@ -48,7 +48,7 @@ function logout() {
         cognitoUser.signOut();
         sessionStorage.removeItem("idToken"); // Clear token storage
         alert("Você saiu com sucesso.");
-        window.location.href = "../login_aws.html"; // Redirect to login page
+        window.location.href = window.location.origin + "/py_2024_maps_html/login_aws.html";//window.location.href = "../login_aws.html"; // Redirect to login page
     }
 }
 
@@ -228,7 +228,7 @@ function logout() {
         sessionStorage.removeItem("idToken");
         sessionStorage.removeItem("loggedInUser"); // ✅ Remove user session
         alert("Você saiu com sucesso.");
-        window.location.href = "../login_aws.html";
+          window.location.href = window.location.origin + "/py_2024_maps_html/login_aws.html";//window.location.href = "../login_aws.html"; // Redirect to login page
     }
 }
 
@@ -239,7 +239,7 @@ function checkAuthentication() {
         console.warn("⚠️ No authenticated user found.");
         sessionStorage.removeItem("loggedInUser");
         sessionStorage.removeItem("userGroup");
-        window.location.href = "../login_aws.html";
+        window.location.href = window.location.origin + "/py_2024_maps_html/login_aws.html";//window.location.href = "../login_aws.html"; // Redirect to login page
         return;
     }
 
@@ -252,7 +252,7 @@ function checkAuthentication() {
                     console.error("❌ Session renewal failed:", err);
                     sessionStorage.removeItem("loggedInUser");
                     sessionStorage.removeItem("userGroup");
-                    window.location.href = "../login_aws.html";
+                    window.location.href = window.location.origin + "/py_2024_maps_html/login_aws.html";//window.location.href = "../login_aws.html"; // Redirect to login page
                 } else {
                     console.log("✅ Session renewed!");
                     sessionStorage.setItem("idToken", newSession.getIdToken().getJwtToken());
