@@ -211,7 +211,6 @@ function resetPassword() {
 }
 
 function logout() {
-    const currentPath = window.location.pathname;
     const hostname = window.location.hostname;
     const cognitoUser = userPool.getCurrentUser();
     if (cognitoUser) {
@@ -228,13 +227,20 @@ function logout() {
 }
 
 function checkAuthentication() {
+    const hostname = window.location.hostname;
     const cognitoUser = userPool.getCurrentUser();
 
     if (!cognitoUser) {
         console.warn("⚠️ No authenticated user found.");
         sessionStorage.removeItem("loggedInUser");
         sessionStorage.removeItem("userGroup");
+        
+        if (hostname === "localhost"){
+        // ✅ Correct logout redirection
         redirectTo("/mapa/index_aws.html");
+        }
+        else{redirectTo("/py_2024_maps_html/mapa/index_aws.html")}
+
         return;
     }
 
@@ -247,7 +253,13 @@ function checkAuthentication() {
                     console.error("❌ Session renewal failed:", err);
                     sessionStorage.removeItem("loggedInUser");
                     sessionStorage.removeItem("userGroup");
+
+                    if (hostname === "localhost"){
+                    // ✅ Correct logout redirection
                     redirectTo("/mapa/index_aws.html");
+                    }
+                    else{redirectTo("/py_2024_maps_html/mapa/index_aws.html")}
+
                 } else {
                     console.log("✅ Session renewed!");
                     sessionStorage.setItem("idToken", newSession.getIdToken().getJwtToken());
@@ -323,37 +335,33 @@ function storeUserGroup(idToken) {
 }
 
 function handleLoginSuccess(session) {
+    const hostname = window.location.hostname;
     const idToken = session.getIdToken().getJwtToken();
     storeUserGroup(idToken);
     console.log("Login successful!");
+    if (hostname === "localhost"){ // ✅ Correct logout redirection
     redirectTo("/mapa/index_aws.html");
+    }
+    else{redirectTo("/py_2024_maps_html/mapa/index_aws.html")}
 }
 
 function checkRedirection() {
-    const userGroup = sessionStorage.getItem("userGroup");
-    console.log("🔄 Checking redirection based on user group:", userGroup);
-
+    const hostname = window.location.hostname;
     const currentPath = window.location.pathname;
 
-    setTimeout(() => {
-        if (userGroup === "Basic") {
-            console.log("🔄 Redirecting Basic user to dashboard...");
-            if (!currentPath.endsWith("/mapa/index_aws.html")) {
-                redirectTo("/mapa/index_aws.html");
-            } else {
-                console.log("✅ Already on /mapa/index_aws.html. No redirection needed.");
-            }
-        } else if (userGroup === "Premium") {
-            console.log("🔄 Redirecting Premium user...");
-            if (!currentPath.endsWith("/mapa/index_aws.html")) {
-                redirectTo("/mapa/index_aws.html"); // ✅ Redirect to correct premium page
-            } else {
-                console.log("✅ Already on /mapa/index_aws.html. No redirection needed.");
-            }
-        } else {
-            console.warn("⚠ User Group is missing or undefined. Ensure authentication is correct.");
-        }
-    }, 500);
+    // ✅ If the user is already on the correct page, do NOT redirect
+    if ((hostname === "localhost" && currentPath.endsWith("/mapa/index_aws.html")) ||
+        (hostname !== "localhost" && currentPath.endsWith("/py_2024_maps_html/mapa/index_aws.html"))) {
+        console.log("✅ Already on the correct page. No redirection needed.");
+        return;
+    }
+
+    // ✅ Redirect only if needed
+    if (hostname === "localhost") {
+        redirectTo("/mapa/index_aws.html");
+    } else {
+        redirectTo("/py_2024_maps_html/mapa/index_aws.html");
+    }
 }
 
 
