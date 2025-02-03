@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="logo.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Rota do Arremate</title>
+    <link rel="stylesheet" href="styles_login.css">
+
+    <!-- AWS SDK e Cognito Identity JS -->
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.814.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/amazon-cognito-identity-js@6.3.12/dist/amazon-cognito-identity.min.js"></script>
+    <script src="aws-auth.js"></script> <!-- Novo script para autenticação com AWS -->
+</head>
+<body>
+    <div class="container">
+        <img src="logo.png" alt="Rota do Arremate" class="logo">
+        <h1 id="form-title">Rota do Arremate - Login</h1>
+        <p class="description">Acesse gratuitamente o primeiro mapa com todos os imóveis em leilões da Caixa Econômica Federal.</p>
+        <form id="loginForm">
+          <div id="mainFields" style="display: block;">
+          <input type="email" id="email" placeholder="E-mail" required>
+          <input type="password" id="password" placeholder="Senha" required>
+
+          <!-- Extra fields for Cadastro (Initially Hidden) -->
+          <div id="extraFields" style="display: none;">
+            <input type="text" id="givenName" placeholder="Primeiro Nome" required>
+            <input type="text" id="familyName" placeholder="Sobrenome" required>
+          </div>
+          <button type="button" id="form-button" onclick="handleForm()">Entrar</button>
+        </form>
+        <p id="toggle-message">
+            Não tem uma conta? <a href="#" onclick="toggleForm()">Cadastrar</a>
+        </p>
+        <p id="reset-password" style="text-align: center; margin-top: 10px;">
+            <a href="#" onclick="resetPassword()">Esqueceu sua senha?</a>
+        </p>
+
+        <!-- Reset Password Section (Initially Hidden) -->
+        <div id="resetPasswordSection" style="display: none;">
+            <h2>Redefinir Senha</h2>
+            <input type="text" id="resetCode" placeholder="Código de verificação" required>
+            <input type="password" id="newPassword" placeholder="Nova senha" required>
+            <button onclick="confirmNewPassword()">Redefinir Senha</button>
+        </div>
+        <p id="logout" style="text-align: center; margin-top: 10px; display: none;">
+            <a href="#" onclick="logout()">Sair</a>
+        </p>
+        <!-- Confirmation form (hidden by default) -->
+        <div id="confirmationSection" style="display: none;">
+          <h2>Confirme sua Conta</h2>
+          <input type="text" id="confirmationCode" placeholder="Entre com o código enviao ao seu email:" required>
+          </p>
+          <button type="button" onclick="confirmAccount()">Confirmar</button>
+        </div>
+
+        <p id="error-message"></p>
+        <p id="loading-message"></p>
+    </div>
+    <script>
+        function handleLogin() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            if (!email || !password) {
+                alert("⚠ Por favor, insira e-mail e senha.");
+                return;
+            }
+
+            // Call loginUser() from aws-auth.js
+            loginUser(email, password);
+        }
+    </script>
+</body>
+</html>

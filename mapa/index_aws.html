@@ -1,7 +1,134 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="firebase.js"></script>
+    <link rel="icon" type="image/png" href="../logo.png">
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.814.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/amazon-cognito-identity-js@6.3.12/dist/amazon-cognito-identity.min.js"></script>
+    <script src="../aws-auth.js"></script>
+    <script>
+    // Restrict Access
+    document.addEventListener("DOMContentLoaded", function () {
+        checkAuthentication();
+        setTimeout(fetchUserGroup, 100);
+        setTimeout(hidePremiumFeatures, 100); // Ensure it runs after user group is stored
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const userGroup = sessionStorage.getItem("userGroup");
+        console.log("User Group:", userGroup);
+
+        const premiumElement = document.getElementById("premiumFeature"); // Fix here
+
+        if (premiumElement) {
+            if (userGroup === "Basic") {
+                premiumElement.style.display = "none"; // Hide premium content
+            }
+        } else {
+            console.warn("⚠ Element with ID 'premiumFeature' not found in DOM.");
+        }
+    });
+
+
+    function restrictPageAccess() {
+        const userGroup = sessionStorage.getItem("userGroup");
+
+        if (!userGroup) {
+            alert("Erro ao verificar seu acesso.");
+            window.location.href = "../login_aws.html"; // Redirect Basic users to login
+            return;
+        }
+
+    //    if (userGroup === "Basic") {
+    //        alert("⚠️ Você não tem permissão para acessar esta página.");
+    //        window.location.href = "../login_aws.html"; // Redirect Basic users to login
+    //    }
+    }
+    //Hide Features for Basic Users
+    function hidePremiumFeatures() {
+        const userGroup = sessionStorage.getItem("userGroup");
+        console.log("User Group:", userGroup);
+
+        if (userGroup === "Basic") {
+            console.log("Applying restrictions for Basic user.");
+
+            // Elements that should be completely hidden
+            const elementsToHide = ["testepremiumhide"];
+            elementsToHide.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.style.display = "none";
+                    console.log("Hiding:", id);
+                } else {
+                    console.log("Element not found:", id);
+                }
+            });
+
+            // Elements that should be **visible but disabled**
+            const elementsToDisable = ["testepremiumclick", "testeproclick"];
+            elementsToDisable.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    console.log("Disabling interaction for:", id);
+                    el.style.pointerEvents = "none";
+                    el.style.opacity = "0.5";
+                    el.title = "Recurso disponível apenas para usuários Pro";
+                } else {
+                    console.log("Element not found:", id);
+                }
+            });
+
+            // Prevent clicks and show message for Pro features
+            elementsToDisable.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener("click", function (event) {
+                        event.preventDefault();
+                        alert("🔒 Este recurso está disponível apenas para usuários Pro!");
+                    });
+                }
+            });
+        }
+    }
+
+
+
+
+    function checkAuthentication() {
+        const cognitoUser = userPool.getCurrentUser();
+
+        if (!cognitoUser) {
+            console.warn("Nenhum usuário autenticado.");
+            sessionStorage.removeItem("loggedInUser");
+            sessionStorage.removeItem("userGroup");
+            window.location.href = "login_aws.html";
+            return;
+        }
+
+        cognitoUser.getSession((err, session) => {
+            if (err || !session.isValid()) {
+                console.warn("⚠️ Sessão expirada. Tentando renovar...");
+                cognitoUser.refreshSession(session.getRefreshToken(), (err, newSession) => {
+                    if (err) {
+                        console.error("Erro ao renovar sessão:", err);
+                        sessionStorage.removeItem("loggedInUser");
+                        sessionStorage.removeItem("userGroup");
+                        window.location.href = "login_aws.html";
+                    } else {
+                        console.log("✅ Sessão renovada!");
+                        sessionStorage.setItem("idToken", newSession.getIdToken().getJwtToken());
+                        fetchUserGroup(); // ✅ Fetch group after session renewal
+                    }
+                });
+            } else {
+                console.log("✅ Sessão ativa e válida para:", cognitoUser.getUsername());
+                sessionStorage.setItem("idToken", session.getIdToken().getJwtToken());
+                sessionStorage.setItem("loggedInUser", cognitoUser.getUsername());
+                fetchUserGroup(); // ✅ Ensure we fetch the group on each authentication check
+            }
+        });
+    }
+
+    </script>
     <link rel="stylesheet" href="styles.css">
     <title>Rota do Arremate</title>
     <meta charset="utf-8">
@@ -29,59 +156,65 @@
     <div id="filter-panel">
         <h3 id="mapa-oportunidades">Mapa de Oportunidades</h3>
 
-        <div class="filter-group">
-            <h4>Modalidade de Venda</h4>
-            <div id="filter-modalidade"></div>
-        </div>
-
-        <div class="filter-group">
-            <h4>Tipo</h4>
-            <div id="filter-tipo"></div>
-        </div>
-
-        <div class="filter-group">
-            <h4>Faixa de Preço</h4>
-            <div class="price-range">
-                <label for="price-range">R$ <span id="price-min">0</span> - R$ <span id="price-max">20000000</span></label>
-                <div id="price-slider"></div>
+            <div class="filter-group">
+                <h4>Modalidade de Venda</h4>
+                <div id="filter-modalidade"></div>
             </div>
-        </div>
 
-        <div class="filter-group">
-            <h4>Faixa de Desconto</h4>
-            <div class="price-range">
-                <label for="discount-range"><span id="discount-min">0</span>% - <span id="discount-max">100</span>%</label>
-                <div id="discount-slider"></div>
+            <div class="filter-group">
+                <h4>Tipo</h4>
+                <div id="filter-tipo"></div>
             </div>
-        </div>
+
+            <div class="filter-group">
+                <h4>Faixa de Preço</h4>
+                <div class="price-range">
+                    <label for="price-range">R$ <span id="price-min">0</span> - R$ <span id="price-max">20000000</span></label>
+                    <div id="price-slider"></div>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <h4>Faixa de Desconto</h4>
+                <div class="price-range">
+                    <label for="discount-range"><span id="discount-min">0</span>% - <span id="discount-max">100</span>%</label>
+                    <div id="discount-slider"></div>
+                </div>
+            </div>
 
         <h3 id="historico-oportunidades">Histórico de Oportunidades</h3>
 
-        <div class="filter-group">
-            <h4>Modalidade de Venda</h4>
-            <div id="filter-modalidade-resultados"></div>
-        </div>
-
-        <div class="filter-group">
-            <h4>Tipo</h4>
-            <div id="filter-tipo-resultados"></div>
-        </div>
-
-        <div class="filter-group">
-            <h4>Valor da Oferta</h4>
-            <div class="price-range">
-                <label for="Valor_Oferta-range">R$ <span id="Valor_Oferta-min">0</span> - R$ <span id="Valor_Oferta-max">20000000</span></label>
-                <div id="Valor_Oferta-slider-resultados"></div>
+            <div class="filter-group">
+                <h4>Modalidade de Venda</h4>
+                <div id="filter-modalidade-resultados"></div>
             </div>
-        </div>
 
-        <div class="filter-group">
-            <h4>Percentual de Luta</h4>
-            <div class="price-range">
-                <label for="perc_de_luta-range"><span id="perc_de_luta-min">0</span>% - <span id="perc_de_luta-max">100</span>%</label>
-                <div id="perc_de_luta-slider-resultados"></div>
+            <div class="filter-group">
+                <h4>Tipo</h4>
+                <div id="filter-tipo-resultados"></div>
             </div>
-        </div>
+
+            <div class="filter-group">
+                <h4>Valor da Oferta</h4>
+                <div class="price-range">
+                    <label for="Valor_Oferta-range">R$ <span id="Valor_Oferta-min">0</span> - R$ <span id="Valor_Oferta-max">20000000</span></label>
+                    <div id="Valor_Oferta-slider-resultados"></div>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <h4>Percentual de Luta</h4>
+                <div class="price-range">
+                    <label for="perc_de_luta-range"><span id="perc_de_luta-min">0</span>% - <span id="perc_de_luta-max">100</span>%</label>
+                    <div id="perc_de_luta-slider-resultados"></div>
+                </div>
+            </div>
+
+        <h3 id="testepremiumclick" class="premium-content">Teste Premium Click Premium</h3>
+
+        <h3 id="testeproclick" class="pro-feature">Teste Premium Click Prom</h3>
+
+        <h3 id="testepremiumhide">Teste Premium Hide</h3>
     </div>
 
     <div id="map"></div>
@@ -239,6 +372,9 @@
                 });
             });
         });
+    </script>
+    <script>
+    checkRedirection();
     </script>
 </body>
 </html>
