@@ -219,7 +219,7 @@ function logout() {
     sessionStorage.clear();
     alert("Você saiu com sucesso!");
 
-    // ✅ Redirect dynamically (fix applied in redirectTo())
+    // ✅ Correct logout redirection
     redirectTo("/login_aws.html");
 }
 
@@ -355,26 +355,31 @@ function checkRedirection() {
 
 function getBasePath() {
     const currentPath = window.location.pathname;
+    const hostname = window.location.hostname;
 
-    // ✅ Only return "/mapa" if the user is currently in a "mapa" page
-    if (currentPath.includes('/mapa/') && !currentPath.endsWith("login_aws.html")) {
-        return '/mapa';
+    // ✅ If running on localhost, do NOT add /py_2024_maps_html/
+    if (hostname === "localhost") {
+        return "";
     }
 
-    // ✅ Otherwise, return an empty string (to avoid duplicate paths on logout)
-    return '';
+    // ✅ In production, ensure /py_2024_maps_html/ is always included
+    if (!currentPath.includes("/py_2024_maps_html/")) {
+        return "/py_2024_maps_html";
+    }
+
+    return "";
 }
 
 function redirectTo(path) {
     let basePath = getBasePath();
 
-    // ✅ If logging out, do NOT append "/mapa/"
+    // ✅ Special case: If logging out, remove /mapa/
     if (path.includes("login_aws.html")) {
         basePath = "";
     }
 
     const fullPath = window.location.origin + basePath + path;
-    console.log("🚀 Redirecting to:", fullPath);
+    console.log("🚀 Redirecting to:", fullPath, "| basePath:", basePath, "| target path:", path);
     window.location.href = fullPath;
 }
 
