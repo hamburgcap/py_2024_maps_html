@@ -211,6 +211,8 @@ function resetPassword() {
 }
 
 function logout() {
+    const currentPath = window.location.pathname;
+    const hostname = window.location.hostname;
     const cognitoUser = userPool.getCurrentUser();
     if (cognitoUser) {
         cognitoUser.signOut();
@@ -218,9 +220,11 @@ function logout() {
 
     sessionStorage.clear();
     alert("Você saiu com sucesso!");
-
+    if (hostname === "localhost"){
     // ✅ Correct logout redirection
     redirectTo("/login_aws.html");
+    }
+    else{redirectTo("py_2024_maps_html/login_aws.html")}
 }
 
 function checkAuthentication() {
