@@ -331,7 +331,7 @@ function handleLoginSuccess(session) {
     const idToken = session.getIdToken().getJwtToken();
     storeUserGroup(idToken);
     console.log("Login successful!");
-    window.location.href = "/mapa/index_aws.html"; // Redirect to the main page
+    window.location.href = window.location.origin + "/py_2024_maps_html/mapa/index_aws.html";//window.location.href = "/mapa/index_aws.html"; // Redirect to the main page
 }
 
 function checkRedirection() {
@@ -345,7 +345,7 @@ function checkRedirection() {
             console.log("🔄 Redirecting Basic user to dashboard...");
             if (!currentPath.endsWith("/mapa/index_aws.html")) {
                 console.log("🚀 Redirecting to /mapa/index_aws.html");
-                window.location.href = "/mapa/index_aws.html";
+                window.location.href = window.location.origin + "/py_2024_maps_html/mapa/index_aws.html";
             } else {
                 console.log("✅ Already on /mapa/index_aws.html. No redirection needed.");
             }
@@ -353,7 +353,7 @@ function checkRedirection() {
             console.log("🔄 Redirecting Premium user...");
             if (!currentPath.endsWith("/mapa/index_aws.html")) {
                 console.log("🚀 Redirecting to /premium_dashboard.html");
-                window.location.href = "/mapa/index_aws.html";
+                window.location.href = window.location.origin + "/py_2024_maps_html/mapa/index_aws.html"; // window.location.href = "/mapa/index_aws.html";
             } else {
                 console.log("✅ Already on /mapa/index_aws.html. No redirection needed.");
             }
