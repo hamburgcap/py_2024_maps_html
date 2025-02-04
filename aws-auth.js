@@ -213,17 +213,21 @@ function resetPassword() {
 function logout() {
     const hostname = window.location.hostname;
     const cognitoUser = userPool.getCurrentUser();
+
     if (cognitoUser) {
         cognitoUser.signOut();
     }
 
     sessionStorage.clear();
     alert("Você saiu com sucesso!");
-    if (hostname === "localhost"){
-    // ✅ Correct logout redirection
-    redirectTo("/login_aws.html");
+
+    let logoutPath = "/login_aws.html";
+
+    if (hostname === "hamburgcap.com") {
+        logoutPath = "/py_2024_maps_html/login_aws.html";
     }
-    else{redirectTo("/py_2024_maps_html/login_aws.html")}
+
+    redirectTo(logoutPath);
 }
 
 function checkAuthentication() {
@@ -389,11 +393,14 @@ function redirectTo(path) {
     let basePath = "";
 
     if (window.location.hostname === "hamburgcap.com") {
-        basePath = "/py_2024_maps_html"; // ✅ Custom domain on GitHub Pages case
+        // Ensure we do NOT add duplicate `/py_2024_maps_html/`
+        if (!path.startsWith("/py_2024_maps_html/")) {
+            basePath = "/py_2024_maps_html";
+        }
     } else if (window.location.hostname.includes("localhost")) {
         basePath = ""; // ✅ Localhost case
     } else {
-        basePath = ""; // ✅ AWS S3 case (no prefix)
+        basePath = ""; // ✅ AWS S3 (No Prefix)
     }
 
     const fullPath = window.location.origin + basePath + path;
