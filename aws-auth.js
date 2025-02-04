@@ -234,12 +234,14 @@ function checkAuthentication() {
         console.warn("⚠️ No authenticated user found.");
         sessionStorage.removeItem("loggedInUser");
         sessionStorage.removeItem("userGroup");
-        
-        if (hostname === "localhost"){
-        // ✅ Correct logout redirection
-        redirectTo("/mapa/index_aws.html");
+
+        if (hostname.includes("localhost")) {
+            redirectTo("/mapa/index_aws.html");
+        } else if (hostname === "hamburgcap.com") {
+            redirectTo("/py_2024_maps_html/mapa/index_aws.html");
+        } else {
+            redirectTo("/mapa/index_aws.html"); // ✅ AWS S3
         }
-        else{redirectTo("/py_2024_maps_html/mapa/index_aws.html")}
 
         return;
     }
@@ -349,18 +351,19 @@ function checkRedirection() {
     const hostname = window.location.hostname;
     const currentPath = window.location.pathname;
 
-    // ✅ If the user is already on the correct page, do NOT redirect
-    if ((hostname === "localhost" && currentPath.endsWith("/mapa/index_aws.html")) ||
-        (hostname !== "localhost" && currentPath.endsWith("/py_2024_maps_html/mapa/index_aws.html"))) {
+    if ((hostname.includes("localhost") && currentPath.endsWith("/mapa/index_aws.html")) ||
+        (hostname === "hamburgcap.com" && currentPath.endsWith("/py_2024_maps_html/mapa/index_aws.html")) ||
+        (!hostname.includes("localhost") && !hostname.includes("hamburgcap.com") && currentPath.endsWith("/mapa/index_aws.html"))) {
         console.log("✅ Already on the correct page. No redirection needed.");
         return;
     }
 
-    // ✅ Redirect only if needed
-    if (hostname === "localhost") {
+    if (hostname.includes("localhost")) {
         redirectTo("/mapa/index_aws.html");
-    } else {
+    } else if (hostname === "hamburgcap.com") {
         redirectTo("/py_2024_maps_html/mapa/index_aws.html");
+    } else {
+        redirectTo("/mapa/index_aws.html"); // ✅ AWS S3
     }
 }
 
@@ -369,29 +372,32 @@ function getBasePath() {
     const currentPath = window.location.pathname;
     const hostname = window.location.hostname;
 
-    // ✅ If running on localhost, do NOT add /py_2024_maps_html/
-    if (hostname === "localhost") {
-        return "";
-    }
-
-    // ✅ In production, ensure /py_2024_maps_html/ is always included
-    if (!currentPath.includes("/py_2024_maps_html/")) {
-        return "/py_2024_maps_html";
+    function getBasePath() {
+        if (window.location.hostname.includes("localhost")) {
+            return "";
+        } else if (window.location.hostname === "hamburgcap.com") {
+            return "/py_2024_maps_html";
+        } else {
+            return "";
+        }
     }
 
     return "";
 }
 
 function redirectTo(path) {
-    let basePath = getBasePath();
+    let basePath = "";
 
-    // ✅ Special case: If logging out, remove /mapa/
-    if (path.includes("login_aws.html")) {
-        basePath = "";
+    if (window.location.hostname === "hamburgcap.com") {
+        basePath = "/py_2024_maps_html"; // ✅ Custom domain on GitHub Pages case
+    } else if (window.location.hostname.includes("localhost")) {
+        basePath = ""; // ✅ Localhost case
+    } else {
+        basePath = ""; // ✅ AWS S3 case (no prefix)
     }
 
     const fullPath = window.location.origin + basePath + path;
-    console.log("🚀 Redirecting to:", fullPath, "| basePath:", basePath, "| target path:", path);
+    console.log("🚀 Redirecting to:", fullPath);
     window.location.href = fullPath;
 }
 
