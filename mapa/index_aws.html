@@ -93,14 +93,21 @@
 
 
 
-    function checkAuthentication() {
+   function checkAuthentication() {
+        const hostname = window.location.hostname;
         const cognitoUser = userPool.getCurrentUser();
 
         if (!cognitoUser) {
             console.warn("Nenhum usuário autenticado.");
             sessionStorage.removeItem("loggedInUser");
             sessionStorage.removeItem("userGroup");
-            window.location.href = "login_aws.html";
+            if (hostname.includes("localhost")) {
+                redirectTo("/mapa/index_aws.html");
+            } else if (hostname === "hamburgcap.com") {
+                redirectTo("/py_2024_maps_html/mapa/index_aws.html");
+            } else {
+                redirectTo("/mapa/index_aws.html"); // ✅ AWS S3
+            }
             return;
         }
 
@@ -126,6 +133,7 @@
                 fetchUserGroup(); // ✅ Ensure we fetch the group on each authentication check
             }
         });
+
     }
 
     </script>
