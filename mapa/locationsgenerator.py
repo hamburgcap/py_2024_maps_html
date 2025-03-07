@@ -8,31 +8,10 @@ import random
 import os
 import threading
 import keyboard  # Biblioteca para capturar eventos de teclado
+import datetime  # Certifique-se de importar o módulo no topo do script
 
-def load_user_agents_from_csv():
-    """Carrega a lista de User-Agents de um arquivo CSV na mesma pasta do script."""
-    file_path = os.path.join(os.path.dirname(__file__), 'useragent.csv')
-    try:
-        df = pd.read_csv(file_path)
-        if 'user_agent' in df.columns:
-            return df['user_agent'].dropna().tolist()
-        else:
-            print("A coluna 'user_agent' não foi encontrada no arquivo CSV.")
-    except FileNotFoundError:
-        print(f"Arquivo 'useragent.csv' não encontrado na pasta: {file_path}")
-    except Exception as e:
-        print(f"Erro ao carregar o arquivo CSV: {e}")
-    return []
-
-def get_public_ip():
-    """Obtém o endereço IP público usando um serviço externo."""
-    try:
-        response = requests.get('https://api.ipify.org?format=json', timeout=10)
-        if response.status_code == 200:
-            return response.json().get('ip')
-    except requests.RequestException as e:
-        print(f"Erro ao obter o IP público: {e}")
-    return "IP desconhecido"
+api_key = "AIzaSyD6wxjknXJgG4-DxvO206GBFVNR5GI5wwM"
+request_count = 0
 
 def load_rda_file(file_path):
     """Carrega o arquivo Rda e retorna o dataframe correspondente."""
@@ -45,8 +24,8 @@ def clean_address(address, filters):
     """Filtra endereços com base em múltiplos critérios e remove tudo após a 4ª vírgula."""
     if not any(f in address for f in filters):
         return None  # Ignora endereços que não contêm os filtros especificados
-    cleaned = ','.join(address.split(',')[:4])
-    return cleaned.replace("Brasil,", "").strip().strip(',')
+    cleaned = ','.join(address.split(',')[:8])
+    return cleaned.strip(' ,')
 
 def remove_last_segment(address):
     """Remove o último segmento do endereço baseado em vírgulas."""
@@ -55,46 +34,45 @@ def remove_last_segment(address):
         return parts[0].strip() if len(parts) > 1 else address.strip()
     return address.strip()  # Se não houver nada para remover, retorna o endereço original
 
-def get_geolocation(address, user_agents):
-    """Obtém a geolocalização para um endereço usando a API Nominatim, com redução do endereço em caso de falha."""
-    base_url = "https://nominatim.openstreetmap.org/search"
+def get_geolocation(address, api_key, cidade, uf):  # Adicionado cidade e UF
+    """Obtém a geolocalização para um endereço usando a API do Google Maps, com redução do endereço em caso de falha."""
+    base_url = "https://maps.googleapis.com/maps/api/geocode/json"
     params = {
-        'format': 'json',
-        'addressdetails': 0,
-        'limit': 2  # Retorna até 2 resultados para maior precisão
+    'key': api_key,
+    'address': address,
+    'region': 'br',
+    'language': 'pt-BR',  # Resultados em português
+    'components': f"locality:{cidade}|administrative_area:{uf}"
     }
     retry_interval = 5 * 60  # 5 minutos inicial
     max_retries = 5  # Número máximo de tentativas
     max_reductions = 20  # Limite máximo de reduções do endereço
-    wait_between_reductions = 20  # Espera de 10 segundos entre reduções do endereço
+    wait_between_reductions = random.randint(1, 3)  # Espera entre reduções (em segundos)
 
     reductions = 0
     while address and reductions <= max_reductions:
         for attempt in range(max_retries):
-            headers = {'User-Agent': random.choice(user_agents)}
-            current_ip = get_public_ip()
             print(f"\nTentativa {attempt + 1}/{max_retries} para o endereço: {address}")
-            print(f"- User-Agent: {headers['User-Agent']}")
-            print(f"- IP utilizado: {current_ip}")
-
             try:
-                params['q'] = address
-                response = requests.get(base_url, params=params, headers=headers, timeout=15)
+                params['address'] = address
+                response = requests.get(base_url, params=params, timeout=15)
+                global request_count  # Permite acessar a variável global
+                request_count += 1  # Incrementa o contador
+                print(f"API Request #{request_count}: {response.url}")  # Loga a URL requisitada
                 print(f"URL chamada: {response.url}")
                 if response.status_code == 200:
                     data = response.json()
-                    print(f"Resposta do servidor: {data}")
-                    if data:
-                        lat = float(data[0]['lat'])
-                        lon = float(data[0]['lon'])
-                        return lat, lon
+                    if 'results' in data and len(data['results']) > 0:
+                        location = data['results'][0]['geometry']['location']
+                        lat = location['lat']
+                        lng = location['lng']
+                        return lat, lng
                     else:
-                        print(f"Resposta vazia para o endereço: {address}")
-                        break  # Tentar reduzir o endereço
+                        print(f"Endereço não encontrado: {address}")
+                        break
                 elif response.status_code == 403:
-                    print(f"Erro HTTP 403 para o endereço: {address}. Mudando User-Agent e aguardando {retry_interval // 60} minutos...")
-                    time.sleep(retry_interval)
-                    retry_interval *= 2
+                    print(f"Erro HTTP 403 para o endereço: {address}. Verifique sua chave de API.")
+                    return 0.00, 0.00
                 else:
                     print(f"Erro HTTP {response.status_code} para o endereço: {address}")
             except requests.exceptions.RequestException as e:
@@ -103,17 +81,18 @@ def get_geolocation(address, user_agents):
                 retry_interval *= 2
 
         # Reduzir o endereço removendo o último segmento
-        print(f"Reduzindo o endereço: {address}")  # Adicionado log de redução
+        print(f"Reduzindo o endereço: {address}")
         address = remove_last_segment(address)
         reductions += 1
-        print(f"Endereço reduzido ({reductions}/{max_reductions}): {address}")
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        print(f"[{timestamp}] Endereço reduzido ({reductions}/{max_reductions}): {address}")
 
         if ',' not in address:  # Parar se restar apenas um segmento
             print("Endereço chegou a um único segmento. Parando a redução.")
             break
 
         print(f"Tentando novamente com endereço reduzido: {address}")
-        time.sleep(wait_between_reductions)  # Espera entre reduções do endereço
+        time.sleep(wait_between_reductions)
 
     # Se todas as tentativas falharem, retornar 0.00, 0.00
     print(f"Falha ao obter coordenadas para o endereço: {address}. Definindo lat=0.00 e lng=0.00")
@@ -159,21 +138,35 @@ def save_progress(locations):
         json.dump(locations, f, ensure_ascii=False, indent=4)
     print("Progresso salvo no arquivo locations.json")
 
+def save_history(locations):
+    """Salva o histórico completo no arquivo locations_history.json."""
+    with open('locations_history.json', 'w', encoding='utf-8') as f:
+        json.dump(locations, f, ensure_ascii=False, indent=4)
+    print("Histórico salvo no arquivo locations_history.json")
+
 def monitor_save_request(locations):
-    """Monitor para salvar o progresso quando a tecla 'S' for pressionada."""
+    """Monitor para salvar o progresso quando a tecla '#' for pressionada."""
     while True:
         if keyboard.is_pressed('#'):
-            save_progress(locations)
+            save_progress(locations)  # Salva o progresso no locations.json
+            save_history(locations)  # Salva o histórico no locations_history.json
             time.sleep(30)  # Evita múltiplas salvagens consecutivas
+
+def save_request_count():
+    """Salva o número total de requisições no arquivo request_count.json."""
+    with open("request_count.json", "w") as f:
+        json.dump({"total_requests": request_count}, f)
+
+def load_request_count():
+    """Carrega o número total de requisições do arquivo request_count.json."""
+    global request_count
+    if os.path.exists("request_count.json"):
+        with open("request_count.json", "r") as f:
+            data = json.load(f)
+            request_count = data.get("total_requests", 0)
 
 def main():
     start_time = time.time()  # Início do timer
-
-    # Carregar User-Agents do arquivo CSV
-    user_agents = load_user_agents_from_csv()
-    if not user_agents:
-        print("Lista de User-Agents está vazia. Abortando...")
-        return
 
     # Carregar locais já existentes
     existing_locations = load_existing_locations()
@@ -207,23 +200,23 @@ def main():
     skipped_count = sum(1 for _, row in df.iterrows() if str(row['n_do_imovel']) in existing_keys)
     print(f"Total de endereços a serem pulados: {skipped_count}")
 
+    # Antes do loop, calcular o número total de itens a serem processados no Rda
+    total_items_to_process = total_items - skipped_count  # Considerar itens do Rda que não estão no locations.json
+
     # Processamento dos endereços
     filters = ['']  # Filtros personalizados para endereços
     for idx, (_, row) in enumerate(df.iterrows(), start=1):
         key = str(row['n_do_imovel'])
         address = clean_address(row['google_query'], filters)
+
         if not address:
-            continue
+            continue  # Pula endereços que não atendem aos filtros
 
         if key in existing_keys:
-            print(f"\nPulando {idx}/{total_items}: n_do_imovel={key} já existe no arquivo.")
-            completed += 1
-            continue
+            continue  # Pula endereços já existentes no locations.json
 
         print(f"\nProcessando {idx}/{total_items}: {address}")
-        lat, lng = get_geolocation(address, user_agents)
-        completed += 1
-        pending = total_items - completed
+        lat, lng = get_geolocation(address, api_key, row['cidade'], row['uf'])  # 🟨 Adicionado cidade e UF na chamada
 
         if lat is not None and lng is not None:
             row_data = {k: str(v) for k, v in row.to_dict().items()}
@@ -234,22 +227,39 @@ def main():
         else:
             print("- Falha ao obter coordenadas")
 
-        elapsed_time = time.time() - start_time
-        remaining_time = estimate_remaining_time(start_time, completed, total_items, wait_time)
-        print(f"Tempo passado: {format_elapsed_time(elapsed_time)}")
-        print(f"Endereços processados: {completed}, Endereços pendentes: {pending}")
-        print(f"Tempo estimado para conclusão: {remaining_time}")
+        # Incrementa completed após o processamento do item, independentemente do sucesso
+        completed += 1
 
-        time.sleep(random.randint(10, 20))
+        # Recalcula pendentes
+        pending = total_items_to_process - completed
+
+        # Calcula o tempo estimado para conclusão com base no intervalo médio do tempo random
+        average_wait_time = 1/30  # Média de 30 a 50 segundos
+        remaining_time_seconds = pending * average_wait_time
+        remaining_time_formatted = format_elapsed_time(remaining_time_seconds)
+
+        elapsed_time = time.time() - start_time
+        print(f"Tempo passado: {format_elapsed_time(elapsed_time)}")
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        print(f"[{timestamp}] Endereços processados: {completed}, Endereços pendentes: {pending}")
+        print(f"Tempo estimado para conclusão: {remaining_time_formatted}")
+
+        time.sleep(1/30)
 
     # Filtrar locations.json para manter apenas itens do df.Rda
     df_keys = set(df['n_do_imovel'].astype(str))
+
+    # Salvar o histórico completo antes de filtrar
+    save_history(locations)
+
+    # Filtrar a lista principal
     locations = [loc for loc in locations if str(loc.get('n_do_imovel', 'NULL')) in df_keys]
 
+    # Salvar progresso filtrado no arquivo locations.json
     save_progress(locations)
-    print(f"\nNúmero de itens no novo arquivo locations.json: {len(locations)}")
-    print(f"\nExecução concluída: {format_elapsed_time(time.time() - start_time)}")
-    print(f"\nNúmero de itens no df.Rda: {len(df)}")
 
 if __name__ == "__main__":
+    load_request_count()  # Carrega o contador salvo
     main()
+    save_request_count()  # Salva o contador atualizado
+    print(f"\nTotal API Requests Made: {request_count}")
